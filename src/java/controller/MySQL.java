@@ -5,11 +5,10 @@
  */
 package controller;
 
-
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSetMetaData;
-import com.mysql.jdbc.Statement;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.sql.SQLException;
@@ -44,13 +43,13 @@ public class MySQL {
 
     public String getCandidates() {
         String result = "";
-        Statement statement;
+        PreparedStatement statement;
         ResultSet resultSet;
         if (connected) {
             try {
                 String query = "SELECT * FROM candidato;";
-                statement = (Statement) connection.createStatement();
-                resultSet  = statement.executeQuery(query);
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
                 // If there are no records, display a message
                 if (resultSet.next()) {
                     // get column heads
@@ -72,13 +71,37 @@ public class MySQL {
                 }
                 statement.close();
             } catch (SQLException sqlex) {
-                this.status = "Unable to getCandidates. <br>" + sqlex.getMessage() +  Arrays.toString(sqlex.getStackTrace());
+                this.status = "Unable to getCandidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
                 this.status = this.status.replace(",", "<br>");
                 result = this.status;
             }
         } else {
             result = this.status;
         }
+        return result;
+    }
+
+    public boolean login(String username, String password) {
+        boolean result = false;
+
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if (connected) {
+            try {
+                String query = "SELECT * FROM `user` WHERE `username` = ? AND `password` = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, username);
+                statement.setString(2, password);
+                resultSet = statement.executeQuery(); 
+                if (resultSet.next()) {
+                    result = true;
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to Login. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+
         return result;
     }
 
