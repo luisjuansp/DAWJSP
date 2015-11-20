@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package database;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSetMetaData;
@@ -23,13 +23,16 @@ public class MySQL {
     private Connection connection;
     private boolean connected;
     private String status;
+    private String database = "jdbc:mysql://localhost/proyectodaw";
+    private String username = "root";
+    private String password = "";
 
     public MySQL() {
         // Load the driver to allow connection to the database
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = (Connection) DriverManager.getConnection(
-                    "jdbc:mysql://localhost/proyectodaw", "root", "");
+                    database, username, password);
             connected = true;
             status = "Connected";
         } catch (ClassNotFoundException cnfex) {

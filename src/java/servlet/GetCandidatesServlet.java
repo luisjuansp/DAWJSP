@@ -5,7 +5,7 @@
  */
 package servlet;
 
-import controller.MySQL;
+import database.MySQL;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;

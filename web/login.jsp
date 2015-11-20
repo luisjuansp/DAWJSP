@@ -13,7 +13,17 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        
+        <%
+            Boolean login = (Boolean) session.getAttribute("login");
+            if (login != null) {
+                if (login == false) {
+        %>
+        <%="Por favor intenta de nuevo"%>
+        <%        } else {
+                    response.sendRedirect("login.jsp");
+                }
+            }
+        %>
         <form action="getLogin" method="post">
             <table cellspacing="5" border="0">
                 <tr>

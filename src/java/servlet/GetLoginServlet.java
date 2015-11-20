@@ -5,7 +5,7 @@
  */
 package servlet;
 
-import controller.MySQL;
+import database.MySQL;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -14,13 +14,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 /**
  *
  * @author fofo
  */
 public class GetLoginServlet extends HttpServlet {
-    
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,7 +38,7 @@ public class GetLoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetLoginServlet</title>");            
+            out.println("<title>Servlet GetLoginServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet GetLoginServlet at " + request.getContextPath() + "</h1>");
@@ -73,30 +73,27 @@ public class GetLoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String password = request.getParameter("password");
         String username = request.getParameter("username");
-        
-        
+        String password = request.getParameter("password");
+
         // store the User object in the request object
         MySQL mysql = new MySQL();
-        if(mysql.login(username, password)){
-          // forward request and response objects to JSP page
-        String url = "/index.jsp";
-        RequestDispatcher dispatcher =
-             getServletContext().getRequestDispatcher(url);
-        dispatcher.forward(request, response);   
+        if (mysql.login(username, password)) {
+            // forward request and response objects to JSP page
+            String url = "/index.jsp";
+            request.getSession().setAttribute("login", true);
+            RequestDispatcher dispatcher
+                    = getServletContext().getRequestDispatcher(url);
+            dispatcher.forward(request, response);
+        } else {
+            // forward request and response objects to JSP page
+            String url = "/login.jsp";
+            request.getSession().setAttribute("login", false);
+            RequestDispatcher dispatcher
+                    = getServletContext().getRequestDispatcher(url);
+            dispatcher.forward(request, response);
         }
-        else
-            {
-              request.setAttribute("tried", true);
-          // forward request and response objects to JSP page
-        String url = "/login.jsp";
-        RequestDispatcher dispatcher =
-             getServletContext().getRequestDispatcher(url);
-        dispatcher.forward(request, response);   
-        }
-        
-             
+
     }
 
     /**
@@ -108,5 +105,5 @@ public class GetLoginServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
 }

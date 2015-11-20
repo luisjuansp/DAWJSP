@@ -12,6 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@ include file="login-checker.jsp" %> 
         <h1>Hello World!</h1>
         <form action="getCandidates" method="post">
             <br>
