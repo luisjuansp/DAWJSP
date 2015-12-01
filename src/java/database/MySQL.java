@@ -50,13 +50,19 @@ public class MySQL {
         ResultSet resultSet;
         if (connected) {
             try {
-                String query = "SELECT * FROM candidato;";
+                String query = "SELECT candidato.nombreCand, candidato.telCand, candidato.emailCand from candidato;";
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 // If there are no records, display a message
                 if (resultSet.next()) {
                     // get column heads
-                    result = "<table> <tr>";
+                    result = "<div class='container-fluid'>\n"
+                            + "        <div class='jumbotron'>\n"
+                            + "            <center>\n"
+                            + "            <h1>Candidatos</h1>"
+                            + "                <div class=\"panel panel-primary\">\n"
+                            + "                    <div class=\"panel-heading\">"
+                            + "<table class ='table'> <tr>";
                     ResultSetMetaData rsmd = (ResultSetMetaData) resultSet.getMetaData();
                     for (int i = 1; i <= rsmd.getColumnCount(); ++i) {
                         result += "<th>" + rsmd.getColumnName(i) + "</th>";
@@ -70,7 +76,11 @@ public class MySQL {
                         }
                         result += "</tr> <tr>";
                     } while (resultSet.next());
-                    result += "</tr> </table>";
+                    result += "</tr> </table> </div>\n"
+                            + "                </div>\n"
+                            + "            </center>\n"
+                            + "        </div>\n"
+                            + "    </div>";
                 }
                 statement.close();
             } catch (SQLException sqlex) {
@@ -95,7 +105,7 @@ public class MySQL {
                 statement = connection.prepareStatement(query);
                 statement.setString(1, username);
                 statement.setString(2, password);
-                resultSet = statement.executeQuery(); 
+                resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     result = true;
                 }

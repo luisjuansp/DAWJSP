@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Luis Juan Sanchez P
  */
-public class GetCandidatesServlet extends HttpServlet {
+public class CandidatesServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,7 +38,7 @@ public class GetCandidatesServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetCandidatesServlet</title>");            
+            out.println("<title>Servlet GetCandidatesServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet GetCandidatesServlet at " + request.getContextPath() + "</h1>");
@@ -80,21 +80,42 @@ public class GetCandidatesServlet extends HttpServlet {
         // get a relative file name
 //        ServletContext context = getServletContext();
 //        String path = context.getRealPath("/WEB-INF/EmailList.txt");
-
         // use regular Java classes
 //        User user = new User(firstName, lastName, emailAddress,carrera);
 //        UserIO.addRecord(user, path);
-        
-        // store the User object in the request object
-        MySQL mysql = new MySQL();
-        request.setAttribute("table", mysql.getCandidates());
-        request.setAttribute("test", "tested");
-        
-        // forward request and response objects to JSP page
-        String url = "/mysqltest.jsp";
-        RequestDispatcher dispatcher =
-             getServletContext().getRequestDispatcher(url);
-        dispatcher.forward(request, response);      
+        String button = (String) request.getParameter("button");
+
+        switch (button) {
+            case "getall":
+                // store the User object in the request object
+                MySQL mysql = new MySQL();
+                request.setAttribute("table", mysql.getCandidates());
+                request.setAttribute("test", "tested");
+
+                // forward request and response objects to JSP page
+                String url = "/mysqltest.jsp";
+                RequestDispatcher dispatcher
+                        = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
+                break;
+
+            default:
+                response.setContentType("text/html;charset=UTF-8");
+                try (PrintWriter out = response.getWriter()) {
+                    /* TODO output your page here. You may use following sample code. */
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet GetCandidatesServlet</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<h1>Servlet GetCandidatesServlet at " + request.getContextPath() + "</h1>");
+                    out.println("</body>");
+                    out.println("</html>");
+                }
+                break;
+        }
+
     }
 
     /**
