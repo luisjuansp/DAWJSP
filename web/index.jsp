@@ -4,19 +4,15 @@
     Author     : Luis Juan Sanchez P
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <%@ include file="login-checker.jsp" %> 
-        <h1>Hello World!</h1>
-        <form action="getCandidates" method="post">
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-    </body>
+<jsp:include page="header.jsp" flush="true">
+    <jsp:param name="pageTitle" value="Human Capital System" />
+</jsp:include>
+<%@ include file="login-checker.jsp" %> 
+<body>
+    <h1>Hello World!</h1>
+    <form action="getCandidates" method="post">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
 </html>

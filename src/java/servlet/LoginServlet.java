@@ -5,6 +5,7 @@
  */
 package servlet;
 
+import beans.User;
 import database.MySQL;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author fofo
  */
-public class GetLoginServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,18 +33,27 @@ public class GetLoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet GetLoginServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet GetLoginServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // store the User object in the request object
+        MySQL mysql = new MySQL();
+        if (mysql.login(username, password)) {
+            // forward request and response objects to JSP page
+            String url = "/index.jsp";
+            User user = new User(username, password);
+            request.getSession().setAttribute("login", true);
+            request.getSession().setAttribute("User", user);
+            RequestDispatcher dispatcher
+                    = getServletContext().getRequestDispatcher(url);
+            dispatcher.forward(request, response);
+        } else {
+            // forward request and response objects to JSP page
+            String url = "/login.jsp";
+            request.getSession().setAttribute("login", false);
+            RequestDispatcher dispatcher
+                    = getServletContext().getRequestDispatcher(url);
+            dispatcher.forward(request, response);
         }
     }
 
@@ -72,28 +82,7 @@ public class GetLoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        // store the User object in the request object
-        MySQL mysql = new MySQL();
-        if (mysql.login(username, password)) {
-            // forward request and response objects to JSP page
-            String url = "/index.jsp";
-            request.getSession().setAttribute("login", true);
-            RequestDispatcher dispatcher
-                    = getServletContext().getRequestDispatcher(url);
-            dispatcher.forward(request, response);
-        } else {
-            // forward request and response objects to JSP page
-            String url = "/login.jsp";
-            request.getSession().setAttribute("login", false);
-            RequestDispatcher dispatcher
-                    = getServletContext().getRequestDispatcher(url);
-            dispatcher.forward(request, response);
-        }
-
+        processRequest(request, response);
     }
 
     /**
