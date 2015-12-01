@@ -26,7 +26,7 @@
             <center>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <form action="getLogin" method="post">
+                        <form action="Login" method="post">
                             <table cellspacing="5" border="0">
                                 <tr>
                                     <td align="right" style="vertical-align: middle;"><label>Username:&nbsp;&nbsp;&nbsp;&nbsp;</label></td>
@@ -38,7 +38,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td class="text-center"><br><input type="submit" class="btn btn-success" value="Submit"></td>
+                                    <td class="text-center"><br><input type="submit" name="button" class="btn btn-success" value="Login"></td>
                                 </tr>
                             </table>
                         </form>   
