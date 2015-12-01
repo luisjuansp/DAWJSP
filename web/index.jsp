@@ -12,7 +12,8 @@
     <h1>Hello World!</h1>
     <form action="getCandidates" method="post">
         <br>
-        <input type="submit" value="Submit">
+        <input type="submit" name = "button" value="getall">
     </form>
+    
 </body>
 </html>
