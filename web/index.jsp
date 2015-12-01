@@ -5,22 +5,23 @@
 --%>
 
 <%@page import="beans.User"%>
-<jsp:include page="header.jsp" flush="true">
+<jsp:include page="header.jsp">
     <jsp:param name="pageTitle" value="Human Capital System" />
 </jsp:include>
-<%@ include file="login-checker.jsp" %> 
 <body>
-    <jsp:include page="navbar.jsp" flush="true">
+    <%@ include file="login-checker.jsp"%> 
+    <jsp:include page="navbar.jsp">
         <jsp:param name="active" value="0" />
     </jsp:include>
-    <div class="container text-center">
+    <div id="container" class="container text-center">
         <div class="jumbotron">
             <h1>Human Capital System</h1>
         </div>
         <div class="alert alert-info" role="alert">
             <% User user = (User) session.getAttribute("User");%>
-            <h2>Bienvenido <%= user.getUsername() %></h2>
+            <h2>Bienvenido</h2>
         </div>
     </div>
 </body>
+<%@ include file="footer.jsp"%> 
 </html>

@@ -8,5 +8,5 @@
     Boolean login = (Boolean) session.getAttribute("login");
     if(login == null || login == false){
         response.sendRedirect("login.jsp");
-    }
+    } else {
 %>
