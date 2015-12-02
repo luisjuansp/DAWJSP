@@ -5,6 +5,7 @@
  */
 package database;
 
+import beans.*;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSetMetaData;
 import java.sql.DriverManager;
@@ -46,14 +47,20 @@ public class MySQL {
     }
 
     public String getCandidate(String idCand) {
-        String result = "", nombre = "", tel = "", email = "", econ = "", rechazo, numero = "", calle = "", ciudad = "", estado = "", zip = "";
+        String result = "", nombre = "", tel = "", email = "", econ = "",
+                rechazo, numero = "", calle = "", ciudad = "", estado = "", zip = "";
         int realId = Integer.parseInt(idCand);
         List<String> habilidades = new ArrayList<>();
         PreparedStatement statement;
         ResultSet resultSet;
         if (connected) {
             try {
-                String query = "SELECT candidato.*, habilidades.habilidad, direccion.numero, direccion.calle, direccion.ciudad, direccion.estado, direccion.codigoPostal FROM candidato LEFT JOIN habilidades ON candidato.idCand = habilidades.candId LEFT JOIN direccion ON candidato.idCand = direccion.idDir WHERE candidato.idCand = " + realId + ";";
+                String query = "SELECT candidato.*, habilidades.habilidad, direccion.numero, "
+                        + "direccion.calle, direccion.ciudad, direccion.estado,"
+                        + "direccion.codigoPostal FROM candidato "
+                        + "LEFT JOIN habilidades ON candidato.idCand = habilidades.candId "
+                        + "LEFT JOIN direccion ON candidato.idCand = direccion.idDir "
+                        + "WHERE candidato.idCand = " + realId + ";";
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 // If there are no records, display a message
@@ -80,8 +87,8 @@ public class MySQL {
                                     rechazo = resultSet.getString(i);
                                     break;
                                 case 8:
-                                    if(resultSet.getString(i) != null){
-                                    habilidades.add(resultSet.getString(i));
+                                    if (resultSet.getString(i) != null) {
+                                        habilidades.add(resultSet.getString(i));
                                     }
                                     break;
                                 case 9:
@@ -107,46 +114,43 @@ public class MySQL {
                             + "            <center>\n"
                             + "            <h1>" + nombre + "</h1> <br> <br>"
                             + "                <div class=\"panel panel-info\">\n";
-                            
-                    result += "                    <div class=\"panel-heading\">"; 
-                    result += "                    <h2> Datos </h2> </div> "; 
-                    
-                    result += "                    <div class=\"panel-body\">"; 
+
+                    result += "                    <div class=\"panel-heading\">";
+                    result += "                    <h2> Datos </h2> </div> ";
+
+                    result += "                    <div class=\"panel-body\">";
                     result += "<h3>";
-                    
+
                     result += "Telefono: " + tel + "</br> <br>";
                     result += "E-mail: " + email + "</br> <br>";
-                    result += "Paga esperada: $" + econ + "</br> <br>";  
+                    result += "Paga esperada: $" + econ + "</br> <br>";
                     result += "Estado: " + estado + "</br> <br>";
                     result += "Ciudad: " + ciudad + "</br> <br>";
-                    result += "Calle: " + calle + "</br> <br>";  
-                    result += "Codigo Postal: " + zip + "</br> "; 
-                    
+                    result += "Calle: " + calle + "</br> <br>";
+                    result += "Codigo Postal: " + zip + "</br> ";
+
                     result += "</h3> </div> </div>";
-                    
-                    if (!habilidades.isEmpty()){
+
+                    if (!habilidades.isEmpty()) {
                         result += "<div class=\"panel panel-info\">\n";
-                        result += "                    <div class=\"panel-heading\">"; 
-                        if (habilidades.size() == 1){
-                            result += "                    <h2> Habilidad </h2> </div> "; 
+                        result += "                    <div class=\"panel-heading\">";
+                        if (habilidades.size() == 1) {
+                            result += "                    <h2> Habilidad </h2> </div> ";
                         } else {
                             result += "                    <h2> Habilidades </h2> </div> ";
                         }
-                    
-                    
-                    result += "                    <div class=\"panel-body\">"; 
-                    result += "<h3>";
-                    
-                    for (int i = 0; i < habilidades.size(); i++){
-                        result += habilidades.get(i)+ "<br> <br>";
-                    }                    
-                    result += "</h3> </div> </div>";
-                    }else
-                    {
-                    result += "                    <h2> Sin habilidades registradas </h2>";
-                    }                    
-                    
-                    
+
+                        result += "                    <div class=\"panel-body\">";
+                        result += "<h3>";
+
+                        for (int i = 0; i < habilidades.size(); i++) {
+                            result += habilidades.get(i) + "<br> <br>";
+                        }
+                        result += "</h3> </div> </div>";
+                    } else {
+                        result += "                    <h2> Sin habilidades registradas </h2>";
+                    }
+
                     result += "                </div>\n"
                             + "            </center>\n"
                             + "        </div>\n"
@@ -249,6 +253,41 @@ public class MySQL {
         }
 
         return result;
+    }
+
+    public LinkedList<Empleado> getBasicEmpleados() {
+        String result = "";
+        LinkedList<Empleado> empleados = new LinkedList();
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if (connected) {
+            try {
+                String query = "SELECT candidato.nombreCand, empleado.*, supervisor.nombreCand "
+                        + "FROM empleado "
+                        + "JOIN candidato ON candidato.idCand = empleado.candId "
+                        + "LEFT JOIN empleado AS super ON super.nomina = empleado.supervisor "
+                        + "LEFT JOIN candidato AS supervisor ON supervisor.idCand = super.candId;";
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Empleado empleado = new Empleado();
+                    empleado.setNombreCand(resultSet.getString(1));
+                    empleado.setNomina(resultSet.getInt(2));
+                    empleado.setPuesto(resultSet.getString(3));
+                    empleado.setDepartamento(resultSet.getString(4));
+                    empleado.setFechaEntrada(resultSet.getDate(5));
+                    empleado.setSalario(resultSet.getInt(6));
+                    empleado.setDiasVacaciones(resultSet.getInt(7));
+                    empleado.setSupervisor(resultSet.getString(10));
+                    empleados.add(empleado);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+
+        return empleados;
     }
 
 }

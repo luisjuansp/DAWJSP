@@ -23,7 +23,7 @@
                     if (active == "2") {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#"><span>Entrevistas</span></a></li>
+                    %> ><a href="#" onclick="getEmpleados()"><span>Entrevistas</span></a></li>
                 <li <%
                     if (active == "3") {
                         out.print("class=\"active\"");
@@ -45,7 +45,7 @@
 
 <script>
     function logout() {
-         document.getElementById("logout").submit();
+        document.getElementById("logout").submit();
     }
 </script>
 
@@ -55,7 +55,7 @@
 
 <script>
     function getCandidates() {
-         document.getElementById("getCandi").submit();
+        document.getElementById("getCandi").submit();
     }
 </script>
 
@@ -66,7 +66,17 @@
 
 <script>
     function verDetalles(x) {
-         document.getElementById("specId").value = x;
-         document.getElementById("getDetalle").submit();
+        document.getElementById("specId").value = x;
+        document.getElementById("getDetalle").submit();
+    }
+</script>
+
+<form id="getListaEmp" action="Empleado" method="post">
+    <input type="hidden" name="button" value="getList" />
+</form>
+
+<script>
+    function getEmpleados() {
+        document.getElementById("getListaEmp").submit();
     }
 </script>

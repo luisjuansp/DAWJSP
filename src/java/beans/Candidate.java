@@ -11,6 +11,7 @@ package beans;
  */
 public class Candidate {
 
+    private int idCand;
     private String nombreCand; // VARCHAR(30) NOT NULL,
     private String telCand; // VARCHAR(30) NOT NULL,
     private String emailCand; // VARCHAR(30) NOT NULL,
@@ -18,6 +19,7 @@ public class Candidate {
     private String razonRechazo; // VARCHAR(400),
 
     public Candidate() {
+        idCand = 0;
         nombreCand = "";
         telCand = "";
         emailCand = "";
@@ -25,7 +27,9 @@ public class Candidate {
         razonRechazo = "";
     }
 
-    public Candidate(String nombreCand, String telCand, String emailCand, int expectEconCand, String razonRechazo) {
+    public Candidate(int idCand, String nombreCand, String telCand, 
+            String emailCand, int expectEconCand, String razonRechazo) {
+        this.idCand = idCand;
         this.nombreCand = nombreCand;
         this.telCand = telCand;
         this.emailCand = emailCand;

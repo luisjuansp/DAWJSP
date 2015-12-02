@@ -20,10 +20,9 @@
         </div>
         <div class="alert alert-info" role="alert">
             <% User user = (User) session.getAttribute("User");%>
-            <h2>Bienvenido</h2>
+            <h2>Bienvenido <%= user.getUsername() %></h2>
         </div>
     </div>
-
 </body>
 <%@ include file="footer.jsp"%> 
 </html>
