@@ -18,7 +18,7 @@
                     if (active.equals("1")) {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#"><span>Candidatos</span></a></li>
+                    %> ><a href="#" onclick="getCandidates()"><span>Candidatos</span></a></li>
                 <li <%
                     if (active == "2") {
                         out.print("class=\"active\"");
@@ -46,5 +46,27 @@
 <script>
     function logout() {
          document.getElementById("logout").submit();
+    }
+</script>
+
+<form id="getCandi" action="getCandidates" method="post">
+    <input type="hidden" name="button" value="getbasic" />
+</form>
+
+<script>
+    function getCandidates() {
+         document.getElementById("getCandi").submit();
+    }
+</script>
+
+<form id="getDetalle" action="getCandidates" method="post">
+    <input type="hidden" name="button" value="getall" />
+    <input type="hidden" name = "specId" id = "specId" value = 0>
+</form>
+
+<script>
+    function verDetalles(x) {
+         document.getElementById("specId").value = x;
+         document.getElementById("getDetalle").submit();
     }
 </script>

@@ -84,17 +84,31 @@ public class CandidatesServlet extends HttpServlet {
 //        User user = new User(firstName, lastName, emailAddress,carrera);
 //        UserIO.addRecord(user, path);
         String button = (String) request.getParameter("button");
-
+        MySQL mysql = new MySQL();
+        String url = "";
+        RequestDispatcher dispatcher;
         switch (button) {
-            case "getall":
+            case "getbasic":
                 // store the User object in the request object
-                MySQL mysql = new MySQL();
-                request.setAttribute("table", mysql.getCandidates());
+                request.setAttribute("table", mysql.getBasicCandidates());
                 request.setAttribute("test", "tested");
 
                 // forward request and response objects to JSP page
-                String url = "/mysqltest.jsp";
-                RequestDispatcher dispatcher
+                url = "/mysqltest.jsp";
+                dispatcher
+                        = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
+                break;
+
+            case "getall":
+                // store the User object in the request object
+                String idCand = request.getParameter("specId");
+                request.setAttribute("table", mysql.getCandidate(idCand));
+                request.setAttribute("test", "tested");
+
+                // forward request and response objects to JSP page
+                url = "/detallescandidatos.jsp";
+                dispatcher
                         = getServletContext().getRequestDispatcher(url);
                 dispatcher.forward(request, response);
                 break;

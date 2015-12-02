@@ -1,7 +1,7 @@
 <%-- 
-    Document   : mysqltest
-    Created on : Nov 5, 2015, 3:58:37 PM
-    Author     : Luis Juan Sanchez P
+    Document   : detallescandidatos
+    Created on : Dec 1, 2015, 4:57:03 PM
+    Author     : fofo
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

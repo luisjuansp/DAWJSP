@@ -1178,13 +1178,11 @@ hr {
 }
 h1,
 h2,
-h3,
 h4,
 h5,
 h6,
 .h1,
 .h2,
-.h3,
 .h4,
 .h5,
 .h6 {
@@ -1193,6 +1191,17 @@ h6,
   line-height: 1.1;
   color: #2d2d2d;
 }
+
+h3,
+.h3 {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #fff;
+  background-color: #fff;
+}
+
+
 h1 small,
 h2 small,
 h3 small,
@@ -1278,6 +1287,8 @@ h2,
 h3,
 .h3 {
   font-size: 24px;
+  color: #fff;
+  background-color: #fff;
 }
 h4,
 .h4 {
