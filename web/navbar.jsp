@@ -59,18 +59,6 @@
     }
 </script>
 
-<form id="getDetalle" action="getCandidates" method="post">
-    <input type="hidden" name="button" value="getall" />
-    <input type="hidden" name = "specId" id = "specId" value = 0>
-</form>
-
-<script>
-    function verDetalles(x) {
-        document.getElementById("specId").value = x;
-        document.getElementById("getDetalle").submit();
-    }
-</script>
-
 <form id="getListaEmp" action="Empleado" method="post">
     <input type="hidden" name="button" value="getList" />
 </form>

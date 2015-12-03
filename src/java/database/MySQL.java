@@ -199,8 +199,9 @@ public class MySQL {
         ResultSet resultSet;
         if (connected) {
             try {
-                String query = "SELECT candidato.* , direccion.numero, direccion.calle, direccion.ciudad, direccion.estado, direccion.codigoPostal FROM candidato WHERE NOT EXISTS (SELECT * FROM empleado WHERE candidato.idCand = empleado.candId) "
-                        + "LEFT JOIN direccion ON candidato.idCand = direccion.idDir " ;
+                String query = "SELECT candidato.* , direccion.numero, direccion.calle, direccion.ciudad, direccion.estado, direccion.codigoPostal FROM candidato "
+                        + "LEFT JOIN direccion ON candidato.idCand = direccion.idDir "
+                        + "WHERE NOT EXISTS (SELECT * FROM empleado WHERE candidato.idCand = empleado.candId)" ;
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
