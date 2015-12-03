@@ -35,7 +35,7 @@
                                 <td> <%= candidatos.get(i).getTelCand()%> </td>
                                 <td> <%= candidatos.get(i).getEmailCand()%> </td>
                                 <td> <button type = 'button' class = 'btn btn-info' name = 'detalle' value = " + store + " onclick = 
-                                             "verDetalles(<%= i%>)" > Detalles </button> </td>
+                                             "verDetalles(<%= candidatos.get(i).getIdCand()%>)" > Detalles </button> </td>
                             </tr>
                             <% }
                             %>

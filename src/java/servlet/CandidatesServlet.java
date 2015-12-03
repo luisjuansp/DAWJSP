@@ -108,8 +108,7 @@ public class CandidatesServlet extends HttpServlet {
             case "getall":
                 // store the User object in the request object
                 int idCand = Integer.parseInt(request.getParameter("specId"));
-                LinkedList<Candidate> candidatos = (LinkedList<Candidate>) request.getSession().getAttribute("candidatos");
-                Candidate candidato = candidatos.get(idCand);
+                Candidate candidato = mysql.getCandidate(idCand);
                 candidato.setHabilidades(mysql.getHabilidades(idCand));
                 candidato.setTitulos(mysql.getTitulos(idCand));
                 candidato.setTrabajos(mysql.getAnteriores(idCand));
