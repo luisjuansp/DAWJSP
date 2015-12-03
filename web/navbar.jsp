@@ -23,12 +23,12 @@
                     if (active == "2") {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#" onclick="getEmpleados()"><span>Entrevistas</span></a></li>
+                    %> ><a href="#"><span>Entrevistas</span></a></li>
                 <li <%
                     if (active == "3") {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#"><span>Empleados</span></a></li>
+                    %> ><a href="#"  onclick="getEmpleados()"><span>Empleados</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>

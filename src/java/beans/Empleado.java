@@ -33,10 +33,11 @@ public class Empleado extends Candidate {
     }
 
     public Empleado(int idCand, String nombreCand, String telCand,
-            String emailCand, int expectEconCand, String razonRechazo,
+            String emailCand, int expectEconCand, String razonRechazo, int numero, String calle, String ciudad, String estado, int codigo, String feedback,
             int nomina, String puesto, String departamento, Date fechaEntrada,
             int salario, int diasVacaciones, String supervisor) {
-        super(idCand, nombreCand, telCand, emailCand, expectEconCand, razonRechazo);
+        super(idCand, nombreCand, telCand, emailCand, expectEconCand, razonRechazo, numero,  calle, ciudad, estado,  codigo);
+        
         this.nomina = nomina;
         this.puesto = puesto;
         this.departamento = departamento;

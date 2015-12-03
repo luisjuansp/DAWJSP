@@ -5,9 +5,12 @@
  */
 package servlet;
 
+import beans.Candidate;
+import beans.Empleado;
 import database.MySQL;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -90,11 +93,13 @@ public class CandidatesServlet extends HttpServlet {
         switch (button) {
             case "getbasic":
                 // store the User object in the request object
-                request.setAttribute("table", mysql.getBasicCandidates());
+                request.setAttribute("table", mysql.getCandidates());
                 request.setAttribute("test", "tested");
 
                 // forward request and response objects to JSP page
                 url = "/mysqltest.jsp";
+                LinkedList<Candidate> candidates = mysql.getCandidates();
+                request.getSession().setAttribute("candidatos", candidates);
                 dispatcher
                         = getServletContext().getRequestDispatcher(url);
                 dispatcher.forward(request, response);
@@ -103,11 +108,17 @@ public class CandidatesServlet extends HttpServlet {
             case "getall":
                 // store the User object in the request object
                 String idCand = request.getParameter("specId");
-                request.setAttribute("table", mysql.getCandidate(idCand));
-                request.setAttribute("test", "tested");
+                int realId = Integer.parseInt(idCand);
+                LinkedList<Candidate> candidatos = (LinkedList<Candidate>) request.getSession().getAttribute("candidatos");
+                Candidate candidato = candidatos.get(realId);
+                candidato.setHabilidades(mysql.getHabilidades(idCand));
+                candidato.setTitulos(mysql.getTitulos(idCand));
+                candidato.setTrabajos(mysql.getAnteriores(idCand));
+                candidato.setCompanias(mysql.getCompanias(idCand));
 
                 // forward request and response objects to JSP page
                 url = "/detallescandidatos.jsp";
+                request.getSession().setAttribute("candidato", candidato);
                 dispatcher
                         = getServletContext().getRequestDispatcher(url);
                 dispatcher.forward(request, response);
