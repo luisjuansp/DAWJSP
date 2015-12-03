@@ -34,20 +34,25 @@ public class EmpleadoServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String button = request.getParameter("button");
+        MySQL mysql = new MySQL();
+        String url = "404";
         switch (button) {
             case "getList":
                 // store the User object in the request object
-                MySQL mysql = new MySQL();
                 // forward request and response objects to JSP page
-                String url = "/listaEmpleados.jsp";
+                url = "/listaEmpleados.jsp";
                 LinkedList<Empleado> empleados = mysql.getBasicEmpleados();
                 request.getSession().setAttribute("empleados", empleados);
-                RequestDispatcher dispatcher
-                        = getServletContext().getRequestDispatcher(url);
-                dispatcher.forward(request, response);
-
+                break;
+            case "getDetalle":
+                url = "/detalleEmpleado.jsp";
+                int idEmp = Integer.parseInt(request.getParameter("specId"));
+                Empleado empleado = mysql.getDetalleEmpleado(idEmp);
+                request.getSession().setAttribute("empleado", empleado);
                 break;
         }
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
+        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

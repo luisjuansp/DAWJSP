@@ -4,7 +4,7 @@
     Author     : lsanchez
 --%>
 
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header ">
@@ -20,12 +20,12 @@
                     }
                     %> ><a href="#" onclick="getCandidates()"><span>Candidatos</span></a></li>
                 <li <%
-                    if (active == "2") {
+                    if (active.equals("2")) {
                         out.print("class=\"active\"");
                     }
                     %> ><a href="#" onclick="getEmpleados()"><span>Entrevistas</span></a></li>
                 <li <%
-                    if (active == "3") {
+                    if (active.equals("3")) {
                         out.print("class=\"active\"");
                     }
                     %> ><a href="#"><span>Empleados</span></a></li>
@@ -56,18 +56,6 @@
 <script>
     function getCandidates() {
         document.getElementById("getCandi").submit();
-    }
-</script>
-
-<form id="getDetalle" action="getCandidates" method="post">
-    <input type="hidden" name="button" value="getall" />
-    <input type="hidden" name = "specId" id = "specId" value = 0>
-</form>
-
-<script>
-    function verDetalles(x) {
-        document.getElementById("specId").value = x;
-        document.getElementById("getDetalle").submit();
     }
 </script>
 

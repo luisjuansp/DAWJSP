@@ -26,15 +26,15 @@ public class MySQL {
     private boolean connected;
     private String status;
     private String database = "jdbc:mysql://localhost/proyectodaw";
-    private String username = "root";
-    private String password = "";
+    private String dbusername = "root";
+    private String dbpassword = "";
 
     public MySQL() {
         // Load the driver to allow connection to the database
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = (Connection) DriverManager.getConnection(
-                    database, username, password);
+                    database, dbusername, dbpassword);
             connected = true;
             status = "Connected";
         } catch (ClassNotFoundException cnfex) {
@@ -256,13 +256,12 @@ public class MySQL {
     }
 
     public LinkedList<Empleado> getBasicEmpleados() {
-        String result = "";
         LinkedList<Empleado> empleados = new LinkedList();
         PreparedStatement statement;
         ResultSet resultSet;
         if (connected) {
             try {
-                String query = "SELECT candidato.nombreCand, empleado.*, supervisor.nombreCand "
+                String query = "SELECT candidato.nombreCand, empleado.departamento, candidato.telCand, candidato.emailCand, empleado.nomina "
                         + "FROM empleado "
                         + "JOIN candidato ON candidato.idCand = empleado.candId "
                         + "LEFT JOIN empleado AS super ON super.nomina = empleado.supervisor "
@@ -272,13 +271,10 @@ public class MySQL {
                 while (resultSet.next()) {
                     Empleado empleado = new Empleado();
                     empleado.setNombreCand(resultSet.getString(1));
-                    empleado.setNomina(resultSet.getInt(2));
-                    empleado.setPuesto(resultSet.getString(3));
-                    empleado.setDepartamento(resultSet.getString(4));
-                    empleado.setFechaEntrada(resultSet.getDate(5));
-                    empleado.setSalario(resultSet.getInt(6));
-                    empleado.setDiasVacaciones(resultSet.getInt(7));
-                    empleado.setSupervisor(resultSet.getString(10));
+                    empleado.setDepartamento(resultSet.getString(2));
+                    empleado.setTelCand(resultSet.getString(3));
+                    empleado.setEmailCand(resultSet.getString(4));
+                    empleado.setNomina(resultSet.getInt(5));
                     empleados.add(empleado);
                 }
             } catch (SQLException sqlex) {
@@ -286,8 +282,52 @@ public class MySQL {
                 this.status = this.status.replace(",", "<br>");
             }
         }
-
         return empleados;
+    }
+
+    public Empleado getDetalleEmpleado(int idEmp) {
+        Empleado empleado = new Empleado();
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if (connected) {
+            try {
+                String query = "SELECT c.nombreCand, c.telCand, c.emailCand, c.expectEconCand,"
+                        + " c.razonRechazo, d.numero, d.calle, d.ciudad, d.estado,"
+                        + " d.codigoPostal, e.nomina, e.puesto, e.departamento,"
+                        + " e.fechaEntrada, e.salario, e.diasVacaciones, sc.nombreCand "
+                        + "FROM candidato c JOIN empleado e ON e.candId = c.idCand "
+                        + "JOIN direccion d ON d.idDir = c.direccion "
+                        + "LEFT JOIN empleado s ON e.supervisor = s.nomina "
+                        + "LEFT JOIN candidato sc ON sc.idCand = s.candId "
+                        + "WHERE e.nomina = ?;";
+                statement = connection.prepareStatement(query);
+                statement.setInt(1, idEmp);
+                resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    empleado.setNombreCand(resultSet.getString(1));
+                    empleado.setTelCand(resultSet.getString(2));
+                    empleado.setEmailCand(resultSet.getString(3));
+                    empleado.setExpectEconCand(resultSet.getInt(4));
+                    empleado.setRazonRechazo(resultSet.getString(5));
+                    //empleado.setNumero(resultSet.getString(6));
+                    //empleado.setTelCand(resultSet.getString(7));
+                    //empleado.setEmailCand(resultSet.getString(8));
+                    //empleado.setNombreCand(resultSet.getString(9));
+                    //empleado.setDepartamento(resultSet.getString(10));
+                    empleado.setNomina(resultSet.getInt(11));
+                    empleado.setPuesto(resultSet.getString(12));
+                    empleado.setDepartamento(resultSet.getString(13));
+                    empleado.setFechaEntrada(resultSet.getDate(14));
+                    empleado.setSalario(resultSet.getInt(15));
+                    empleado.setDiasVacaciones(resultSet.getInt(16));
+                    empleado.setSupervisor(resultSet.getString(17));
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return empleado;
     }
 
 }
