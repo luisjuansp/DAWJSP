@@ -24,14 +24,13 @@
                 <br> <br>            
                 <div class="panel panel-primary">
                     <div class="panel-body">
-                        <table class ='sortable table table-striped table-hover'> 
-
+                        <table class ='sortable table table-striped table-hover text-center'> 
                             <tr>
-                                <th>Nombre</th>
-                                <th>Departamento</th>
-                                <th>Telefono</th>
-                                <th>Email</th>
-                                <th></th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Departamento</th>
+                                <th class="text-center">Telefono</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center"></th>
                             </tr>
                             <% for (int i = 0; i < empleados.size(); i++) {%>
                             <tr>

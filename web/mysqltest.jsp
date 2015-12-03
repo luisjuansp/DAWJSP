@@ -14,18 +14,19 @@
     <jsp:include page="navbar.jsp">
         <jsp:param name="active" value="1" />
     </jsp:include>
+    <script src="js/sorttable.js"></script>
     <% LinkedList<Candidate> candidatos = (LinkedList<Candidate>) session.getAttribute("candidatos");%>
 
-    <div class='container-fluid'>
+    <div class='container'>
         <div class='jumbotron'>
             <center>
                 <h1>Candidatos</h1> <br> <br>
                 <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <table class ='table'> <tr>
-                                <th> Nombre</th>
-                                <th> Telefono</th>
-                                <th> Email</th>
+                    <div class="panel-body">
+                        <table class ='sortable table table-hover table-striped text-center'> <tr>
+                                <th class="text-center"> Nombre</th>
+                                <th class="text-center"> Telefono</th>
+                                <th class="text-center"> Email</th>
                                 <th>  </th>
                             </tr>
                             <% for (int i = 0; i < candidatos.size(); i++) {%>

@@ -48,6 +48,10 @@ public class EmpleadoServlet extends HttpServlet {
                 url = "/detalleEmpleado.jsp";
                 int idEmp = Integer.parseInt(request.getParameter("specId"));
                 Empleado empleado = mysql.getDetalleEmpleado(idEmp);
+                empleado.setTitulos(mysql.getTitulos(empleado.getIdCand()));
+                empleado.setHabilidades(mysql.getHabilidades(empleado.getIdCand()));
+                empleado.setCertificados(mysql.getCertificados(empleado.getIdCand()));
+                empleado.setHistorial(mysql.getHistorial(empleado.getNomina()));
                 request.getSession().setAttribute("empleado", empleado);
                 break;
         }

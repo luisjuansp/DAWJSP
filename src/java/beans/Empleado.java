@@ -6,6 +6,7 @@
 package beans;
 
 import java.sql.Date;
+import java.util.LinkedList;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Empleado extends Candidate {
     private int salario;
     private int diasVacaciones;
     private String supervisor;
+    private LinkedList<Historial> historial = new LinkedList<>();
 
     public Empleado() {
         super();
@@ -102,4 +104,14 @@ public class Empleado extends Candidate {
     public void setSupervisor(String supervisor) {
         this.supervisor = supervisor;
     }
+
+    public LinkedList<Historial> getHistorial() {
+        return historial;
+    }
+
+    public void setHistorial(LinkedList<Historial> historial) {
+        this.historial = historial;
+    }
+
+    
 }

@@ -9,7 +9,6 @@
     <jsp:param name="pageTitle" value="Human Capital System" />
 </jsp:include>
 <body>
-
     <%@ include file="login-checker.jsp"%> 
     <jsp:include page="navbar.jsp">
         <jsp:param name="active" value="0" />

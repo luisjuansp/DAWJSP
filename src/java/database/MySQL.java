@@ -199,11 +199,9 @@ public class MySQL {
         ResultSet resultSet;
         if (connected) {
             try {
-                String query = "SELECT candidato.* , direccion.numero, direccion.calle, direccion.ciudad,"
-                        + " direccion.estado, direccion.codigoPostal "
-                        + "FROM candidato "
-                        + "WHERE NOT EXISTS (SELECT * FROM empleado WHERE candidato.idCand = empleado.candId) "
-                        + "LEFT JOIN direccion ON candidato.idCand = direccion.idDir " ;
+                String query = "SELECT candidato.* , direccion.numero, direccion.calle, direccion.ciudad, direccion.estado, direccion.codigoPostal FROM candidato "
+                        + "LEFT JOIN direccion ON candidato.idCand = direccion.idDir "
+                        + "WHERE NOT EXISTS (SELECT * FROM empleado WHERE candidato.idCand = empleado.candId)" ;
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -230,14 +228,13 @@ public class MySQL {
         return candidatos;
     }
     
-    public List<String> getHabilidades(String idCand){
+    public List<String> getHabilidades(int idCand){
         List<String> habilidades = new ArrayList<>();
         PreparedStatement statement;
-        int realId = Integer.parseInt(idCand);
         ResultSet resultSet;
         if(connected){
             try {
-                String query = "SELECT habilidad FROM habilidades WHERE candId = " + realId; 
+                String query = "SELECT habilidad FROM habilidades WHERE candId = " + idCand; 
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -252,14 +249,13 @@ public class MySQL {
         return habilidades;
     }
     
-    public List<Titulo> getTitulos(String idCand){
+    public List<Titulo> getTitulos(int idCand){
         List<Titulo> titulos = new ArrayList<>();
         PreparedStatement statement;
-        int realId = Integer.parseInt(idCand);
         ResultSet resultSet;
         if(connected){
             try {
-                String query = "SELECT instituto, titulacion, fecha FROM titulo WHERE candID = " + realId;
+                String query = "SELECT instituto, titulacion, fecha FROM titulo WHERE candID = " + idCand;
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -277,14 +273,13 @@ public class MySQL {
         return titulos;
     }
     
-    public List<TrabajoAnterior> getAnteriores(String idCand){
+    public List<TrabajoAnterior> getAnteriores(int idCand){
         List<TrabajoAnterior> anteriores = new ArrayList<>();
         PreparedStatement statement;
-        int realId = Integer.parseInt(idCand);
         ResultSet resultSet;
         if(connected){
             try {
-                String query = "SELECT empresaAnt, puestoAnt, fechaEntrada, fechaSalida, salarioAnt FROM trabajo_Anterior WHERE candId = " + realId;
+                String query = "SELECT empresaAnt, puestoAnt, fechaEntrada, fechaSalida, salarioAnt FROM trabajo_Anterior WHERE candId = " + idCand;
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -304,14 +299,13 @@ public class MySQL {
         return anteriores;
     }
     
-    public List<Compania> getCompanias(String idCand){
+    public List<Compania> getCompanias(int idCand){
         List<Compania> companias = new ArrayList<>();
         PreparedStatement statement;
-        int realId = Integer.parseInt(idCand);
         ResultSet resultSet;
         if(connected){
             try {
-                String query = "SELECT nombreComp, status, razonInteres FROM compania WHERE candId = " + realId;
+                String query = "SELECT nombreComp, status, razonInteres FROM compania WHERE candId = " + idCand;
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
@@ -328,6 +322,59 @@ public class MySQL {
         }
         return companias;
     }
+    
+    public LinkedList<Certificado> getCertificados(int idCand){
+        LinkedList<Certificado> certificados = new LinkedList<>();
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if(connected){
+            try {
+                String query = "SELECT organizacion, certificacion, fecha "
+                        + "FROM certificado "
+                        + "WHERE candId = " + idCand;
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Certificado certificado = new Certificado();
+                    certificado.setOrganizacion(resultSet.getString(1));
+                    certificado.setCertificacion(resultSet.getString(2));
+                    certificado.setFecha(resultSet.getDate(3));
+                    certificados.add(certificado);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return certificados;
+    }
+    
+     public LinkedList<Historial> getHistorial(int idEmp){
+        LinkedList<Historial> historiales = new LinkedList<>();
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if(connected){
+            try {
+                String query = "SELECT puestoHist, fechaHist, salarioHist "
+                        + "FROM historial "
+                        + "WHERE empId = " + idEmp;
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Historial historial = new Historial();
+                    historial.setPuesto(resultSet.getString(1));
+                    historial.setFecha(resultSet.getDate(2));
+                    historial.setSalario(resultSet.getInt(3));
+                    historiales.add(historial);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return historiales;
+    }
+
 
     public LinkedList<Empleado> getBasicEmpleados() {
         LinkedList<Empleado> empleados = new LinkedList();
