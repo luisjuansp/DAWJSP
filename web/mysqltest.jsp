@@ -7,7 +7,7 @@
 <%@page import="beans.Candidate"%>
 <%@page import="java.util.LinkedList"%>
 <jsp:include page="header.jsp">
-    <jsp:param name="pageTitle" value="Empleados" />
+    <jsp:param name="pageTitle" value="Candidatos" />
 </jsp:include>
 <body>
     <%@ include file="login-checker.jsp"%> 
@@ -35,7 +35,7 @@
                                 <td> <%= candidatos.get(i).getTelCand()%> </td>
                                 <td> <%= candidatos.get(i).getEmailCand()%> </td>
                                 <td> <button type = 'button' class = 'btn btn-info' name = 'detalle' value = " + store + " onclick = 
-                                             "verDetalles(<%= candidatos.get(i).getIdCand()%>)" > Detalles </button> </td>
+                                             "verDetalles(<%= i%>)" > Detalles </button> </td>
                             </tr>
                             <% }
                             %>
@@ -54,6 +54,7 @@
         <script>
             function verDetalles(x) {
                 document.getElementById("specId").value = x;
+                //alert(document.getElementById("specId").value);
                 document.getElementById("getDetalle").submit();
             }
         </script>
