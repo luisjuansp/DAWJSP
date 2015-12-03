@@ -168,70 +168,7 @@ public class MySQL {
         return result;
     }
 
-    public String getBasicCandidates() {
-        String result = "";
-        int store = 0;
-        PreparedStatement statement;
-        ResultSet resultSet;
-        if (connected) {
-            try {
-                String query = "SELECT candidato.idCand, candidato.nombreCand, candidato.telCand, candidato.emailCand from candidato;";
-                statement = connection.prepareStatement(query);
-                resultSet = statement.executeQuery();
-                // If there are no records, display a message
-                if (resultSet.next()) {
-                    // get column heads
-                    result += "<div class='container-fluid'>\n"
-                            + "        <div class='jumbotron'>\n"
-                            + "            <center>\n"
-                            + "            <h1>Candidatos</h1> <br> <br>"
-                            + "                <div class=\"panel panel-primary\">\n"
-                            + "                    <div class=\"panel-heading\">"
-                            + "<table class ='table'> <tr>";
-                    ResultSetMetaData rsmd = (ResultSetMetaData) resultSet.getMetaData();
-                    for (int i = 1; i <= rsmd.getColumnCount(); ++i) {
-                        if (i != 1) {
-                            result += "<th>" + rsmd.getColumnName(i) + "</th>";
-                        }
-
-                    }
-                    result += "<th> </th>";
-                    result += "</tr> <tr>";
-
-                    // get row data
-                    do {
-                        for (int i = 1; i <= rsmd.getColumnCount(); ++i) {
-                            if (i != 1) {
-                                result += "<td>" + resultSet.getString(i) + "</td> ";
-                            } else {
-                                store = resultSet.getInt(i);
-                            }
-                            if (i == rsmd.getColumnCount()) {
-
-                                result += "<td> <button type = 'button' class = 'btn btn-info' name = 'detalle' value = " + store + " onclick = \"verDetalles(" + store + ")\" > Detalles </button> </td>";
-                            }
-                        }
-                        result += "</tr> <tr>";
-                    } while (resultSet.next());
-                    result += "</tr> </table> </div>\n"
-                            + "                </div>\n"
-                            + "            </center>\n"
-                            + "        </div>\n"
-                            + "    </div>";
-                }
-                statement.close();
-            } catch (SQLException sqlex) {
-                this.status = "Unable to getCandidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
-                this.status = this.status.replace(",", "<br>");
-                result = this.status;
-            }
-        } else {
-            result = this.status;
-        }
-        return result;
-    }
-
-    public boolean login(String username, String password) {
+     public boolean login(String username, String password) {
         boolean result = false;
 
         PreparedStatement statement;
@@ -253,6 +190,143 @@ public class MySQL {
         }
 
         return result;
+    }
+    
+          
+    public LinkedList<Candidate> getCandidates(){
+        LinkedList<Candidate> candidatos = new LinkedList();
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if (connected) {
+            try {
+                String query = "SELECT candidato.* , direccion.numero, direccion.calle, direccion.ciudad,"
+                        + " direccion.estado, direccion.codigoPostal "
+                        + "FROM candidato "
+                        + "WHERE NOT EXISTS (SELECT * FROM empleado WHERE candidato.idCand = empleado.candId) "
+                        + "LEFT JOIN direccion ON candidato.idCand = direccion.idDir " ;
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Candidate candidato = new Candidate();
+                    candidato.setIdCand(resultSet.getInt(1));
+                    candidato.setNombreCand(resultSet.getString(2));
+                    candidato.setTelCand(resultSet.getString(3));
+                    candidato.setEmailCand(resultSet.getString(4));
+                    candidato.setExpectEconCand(resultSet.getInt(5));
+                    candidato.setRazonRechazo(resultSet.getString(6));
+                    candidato.setNumero(resultSet.getInt(8));
+                    candidato.setCalle(resultSet.getString(9));
+                    candidato.setCiudad(resultSet.getString(10));
+                    candidato.setEstado(resultSet.getString(11));
+                    candidato.setCodigo(resultSet.getInt(12));
+                    
+                    candidatos.add(candidato);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return candidatos;
+    }
+    
+    public List<String> getHabilidades(String idCand){
+        List<String> habilidades = new ArrayList<>();
+        PreparedStatement statement;
+        int realId = Integer.parseInt(idCand);
+        ResultSet resultSet;
+        if(connected){
+            try {
+                String query = "SELECT habilidad FROM habilidades WHERE candId = " + realId; 
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    if (resultSet.getString(1) != null)
+                    habilidades.add(resultSet.getString(1));
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return habilidades;
+    }
+    
+    public List<Titulo> getTitulos(String idCand){
+        List<Titulo> titulos = new ArrayList<>();
+        PreparedStatement statement;
+        int realId = Integer.parseInt(idCand);
+        ResultSet resultSet;
+        if(connected){
+            try {
+                String query = "SELECT instituto, titulacion, fecha FROM titulo WHERE candID = " + realId;
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Titulo titulo = new Titulo();
+                    titulo.setInstituto(resultSet.getString(1));
+                    titulo.setTitulacion(resultSet.getString(2));
+                    titulo.setFecha(resultSet.getDate(3));
+                    titulos.add(titulo);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return titulos;
+    }
+    
+    public List<TrabajoAnterior> getAnteriores(String idCand){
+        List<TrabajoAnterior> anteriores = new ArrayList<>();
+        PreparedStatement statement;
+        int realId = Integer.parseInt(idCand);
+        ResultSet resultSet;
+        if(connected){
+            try {
+                String query = "SELECT empresaAnt, puestoAnt, fechaEntrada, fechaSalida, salarioAnt FROM trabajo_Anterior WHERE candId = " + realId;
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    TrabajoAnterior anterior = new TrabajoAnterior();
+                    anterior.setEmpresa(resultSet.getString(1));
+                    anterior.setPuesto(resultSet.getString(2));
+                    anterior.setEntrada(resultSet.getDate(3));
+                    anterior.setSalida(resultSet.getDate(4));
+                    anterior.setSalario(resultSet.getInt(5));
+                    anteriores.add(anterior);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return anteriores;
+    }
+    
+    public List<Compania> getCompanias(String idCand){
+        List<Compania> companias = new ArrayList<>();
+        PreparedStatement statement;
+        int realId = Integer.parseInt(idCand);
+        ResultSet resultSet;
+        if(connected){
+            try {
+                String query = "SELECT nombreComp, status, razonInteres FROM compania WHERE candId = " + realId;
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Compania compania = new Compania();
+                    compania.setCompa(resultSet.getString(1));
+                    compania.setStatus(resultSet.getString(2));
+                    compania.setInteres(resultSet.getString(3));
+                    companias.add(compania);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Candidates. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return companias;
     }
 
     public LinkedList<Empleado> getBasicEmpleados() {
@@ -294,7 +368,7 @@ public class MySQL {
                 String query = "SELECT c.nombreCand, c.telCand, c.emailCand, c.expectEconCand,"
                         + " c.razonRechazo, d.numero, d.calle, d.ciudad, d.estado,"
                         + " d.codigoPostal, e.nomina, e.puesto, e.departamento,"
-                        + " e.fechaEntrada, e.salario, e.diasVacaciones, sc.nombreCand "
+                        + " e.fechaEntrada, e.salario, e.diasVacaciones, sc.nombreCand, c.idCand "
                         + "FROM candidato c JOIN empleado e ON e.candId = c.idCand "
                         + "JOIN direccion d ON d.idDir = c.direccion "
                         + "LEFT JOIN empleado s ON e.supervisor = s.nomina "
@@ -309,11 +383,11 @@ public class MySQL {
                     empleado.setEmailCand(resultSet.getString(3));
                     empleado.setExpectEconCand(resultSet.getInt(4));
                     empleado.setRazonRechazo(resultSet.getString(5));
-                    //empleado.setNumero(resultSet.getString(6));
-                    //empleado.setTelCand(resultSet.getString(7));
-                    //empleado.setEmailCand(resultSet.getString(8));
-                    //empleado.setNombreCand(resultSet.getString(9));
-                    //empleado.setDepartamento(resultSet.getString(10));
+                    empleado.setNumero(resultSet.getInt(6));
+                    empleado.setCalle(resultSet.getString(7));
+                    empleado.setCiudad(resultSet.getString(8));
+                    empleado.setEstado(resultSet.getString(9));
+                    empleado.setCodigo(resultSet.getInt(10));
                     empleado.setNomina(resultSet.getInt(11));
                     empleado.setPuesto(resultSet.getString(12));
                     empleado.setDepartamento(resultSet.getString(13));
@@ -321,6 +395,7 @@ public class MySQL {
                     empleado.setSalario(resultSet.getInt(15));
                     empleado.setDiasVacaciones(resultSet.getInt(16));
                     empleado.setSupervisor(resultSet.getString(17));
+                    empleado.setIdCand(resultSet.getInt(18));
                 }
             } catch (SQLException sqlex) {
                 this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());

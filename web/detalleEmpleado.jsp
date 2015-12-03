@@ -40,10 +40,10 @@
                             <div class="col-lg-6">
                                 <h3>Telefono: <%=empleado.getTelCand()%><br> 
                                     <br>E-mail: <%=empleado.getEmailCand()%><br>
-                                    <br>Estado: <br>
-                                    <br>Ciudad: <br> 
-                                    <br>Calle: <br> 
-                                    <br>Codigo Postal: <br> 
+                                    <br>Direccion: <br>
+                                    <br><%=empleado.getCalle()%> #<%=empleado.getNumero()%><br> 
+                                    <br><%=empleado.getCiudad()%>, <%=empleado.getEstado()%><br> 
+                                    <br>Codigo Postal: <%=empleado.getCodigo()%><br> 
                                 </h3> 
                             </div>
                         </div> 

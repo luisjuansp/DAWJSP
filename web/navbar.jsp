@@ -8,7 +8,7 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header ">
-            <a class="navbar-brand">Human Capital System</a>
+            <a class="navbar-brand"  >Human Capital System</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse">
@@ -23,12 +23,12 @@
                     if (active.equals("2")) {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#" onclick="getEmpleados()"><span>Entrevistas</span></a></li>
+                    %> ><a href="#"><span>Entrevistas</span></a></li>
                 <li <%
                     if (active.equals("3")) {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#"><span>Empleados</span></a></li>
+                    %> ><a href="#"  onclick="getEmpleados()"><span>Empleados</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
