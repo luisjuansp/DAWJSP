@@ -30,7 +30,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EntrevistaServlet</servlet-name>
-        <url-pattern>/EntrevistaServlet</url-pattern>
+        <url-pattern>/Entrevista</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

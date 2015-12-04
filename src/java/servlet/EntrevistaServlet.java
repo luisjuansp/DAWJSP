@@ -9,7 +9,10 @@ import beans.Entrevista;
 import database.MySQL;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +41,7 @@ public class EntrevistaServlet extends HttpServlet {
         String url = "/404";
         RequestDispatcher dispatcher;
         switch (button) {
-            case "getAll":
+            case "getList":
                 url = "/listaEntrevistas.jsp";
                 LinkedList<Entrevista> entrevistas = mysql.getBasicEntrevista();
                 request.getSession().setAttribute("entrevistas", entrevistas);
@@ -46,8 +49,26 @@ public class EntrevistaServlet extends HttpServlet {
                 dispatcher.forward(request, response);
                 break;
             case "getDetalle":
+                url = "/detallesEntrevista.jsp";
+                int idEnt = Integer.parseInt(request.getParameter("specId"));
+                Entrevista entrevista = mysql.getDetalleEntrevista(idEnt);
+                request.getSession().setAttribute("entrevista", entrevista);
+                dispatcher = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
                 break;
             case "editEnt":
+                PrintWriter out = response.getWriter();
+                Map<String, String[]> dataMap = request.getParameterMap();
+                Enumeration<String> names = request.getParameterNames();
+                String candidato = dataMap.get("candidato")[0];
+                String fecha = dataMap.get("fecha")[0];
+                String plataforma = dataMap.get("plataforma")[0];
+                String entrevistador = dataMap.get("entrevistador")[0];
+                String aptitud = dataMap.get("aptitud")[0];
+                String feedback = dataMap.get("feedback")[0];
+                String sidEnt = dataMap.get("idEnt")[0];
+                out.println(mysql.updateEntrevista(Integer.parseInt(sidEnt), candidato, Date.valueOf(fecha), plataforma, entrevistador, aptitud, feedback));
+                out.println(mysql.getStatus());
                 break;
             case "addEnt":
                 break;

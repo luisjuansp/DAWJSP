@@ -392,7 +392,7 @@ public class MySQL {
         return empleado;
     }
 
-    public int updateEmpleado(int nomina, String puesto, String departamento,
+    public int updateEmpleado(int nomina, String departamento, String puesto,
             Date fechaEntrada, int salario, int diasVacaciones, String supervisor) {
         int result = 0;
         PreparedStatement statement;
@@ -558,34 +558,109 @@ public class MySQL {
         }
         return result;
     }
-    
+
     public LinkedList<Entrevista> getBasicEntrevista() {
         LinkedList<Entrevista> entrevistas = new LinkedList();
         PreparedStatement statement;
         ResultSet resultSet;
-//        if (connected) {
-//            try {
-//                String query = "SELECT candidato.nombreCand, empleado.departamento, candidato.telCand, candidato.emailCand, empleado.nomina "
-//                        + "FROM empleado "
-//                        + "JOIN candidato ON candidato.idCand = empleado.candId "
-//                        + "LEFT JOIN empleado AS super ON super.nomina = empleado.supervisor "
-//                        + "LEFT JOIN candidato AS supervisor ON supervisor.idCand = super.candId;";
-//                statement = connection.prepareStatement(query);
-//                resultSet = statement.executeQuery();
-//                while (resultSet.next()) {
-//                    Empleado empleado = new Empleado();
-//                    empleado.setNombreCand(resultSet.getString(1));
-//                    empleado.setDepartamento(resultSet.getString(2));
-//                    empleado.setTelCand(resultSet.getString(3));
-//                    empleado.setEmailCand(resultSet.getString(4));
-//                    empleado.setNomina(resultSet.getInt(5));
-//                    empleados.add(empleado);
-//                }
-//            } catch (SQLException sqlex) {
-//                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
-//                this.status = this.status.replace(",", "<br>");
-//            }
-//        }
+        if (connected) {
+            try {
+                String query = "SELECT ent.plataforma, ent.fecha, feed.aptitudFeed, feed.descripcionFeed, "
+                        + "ent.entrevistador, emp.nombreCand, ent.entrevistado, cand.nombreCand, ent.idEnt "
+                        + "FROM entrevista ent "
+                        + "JOIN empleado e ON e.nomina = ent.entrevistador "
+                        + "JOIN candidato emp ON emp.idCand = e.candId "
+                        + "JOIN candidato cand ON cand.idCand = ent.entrevistado "
+                        + "JOIN feedback feed ON feed.idFeed = ent.feedback;";
+                statement = connection.prepareStatement(query);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    Entrevista entrevista = new Entrevista();
+                    entrevista.setPlataforma(resultSet.getString(1));
+                    entrevista.setFecha(resultSet.getDate(2));
+                    entrevista.setAptitud(resultSet.getString(3));
+                    entrevista.setFeedback(resultSet.getString(4));
+                    entrevista.setEmpId(resultSet.getInt(5));
+                    entrevista.setEmpleado(resultSet.getString(6));
+                    entrevista.setCandId(resultSet.getInt(7));
+                    entrevista.setCandidato(resultSet.getString(8));
+                    entrevista.setIdEnt(resultSet.getInt(9));
+                    entrevistas.add(entrevista);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
         return entrevistas;
+    }
+
+    public Entrevista getDetalleEntrevista(int idEnt) {
+        Entrevista entrevista = new Entrevista();
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if (connected) {
+            try {
+                String query = "SELECT ent.plataforma, ent.fecha, feed.aptitudFeed, feed.descripcionFeed, "
+                        + "ent.entrevistador, emp.nombreCand, ent.entrevistado, cand.nombreCand, ent.idEnt "
+                        + "FROM entrevista ent "
+                        + "JOIN empleado e ON e.nomina = ent.entrevistador "
+                        + "JOIN candidato emp ON emp.idCand = e.candId "
+                        + "JOIN candidato cand ON cand.idCand = ent.entrevistado "
+                        + "JOIN feedback feed ON feed.idFeed = ent.feedback "
+                        + "WHERE ent.idEnt = ?;";
+                statement = connection.prepareStatement(query);
+                statement.setInt(1, idEnt);
+                resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    entrevista.setPlataforma(resultSet.getString(1));
+                    entrevista.setFecha(resultSet.getDate(2));
+                    entrevista.setAptitud(resultSet.getString(3));
+                    entrevista.setFeedback(resultSet.getString(4));
+                    entrevista.setEmpId(resultSet.getInt(5));
+                    entrevista.setEmpleado(resultSet.getString(6));
+                    entrevista.setCandId(resultSet.getInt(7));
+                    entrevista.setCandidato(resultSet.getString(8));
+                    entrevista.setIdEnt(resultSet.getInt(9));
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return entrevista;
+    }
+
+    public int updateEntrevista(int idEnt, String candidato, Date fecha, String plataforma,
+            String entrevistador, String aptitud, String feedback) {
+        int result = 0;
+        PreparedStatement statement, statement1;
+        if (connected) {
+            try {
+                String query = "UPDATE entrevista "
+                        + "SET fecha = ?, "
+                        + "plataforma = ? "
+                        + "WHERE idEnt = ?;";
+                statement = connection.prepareStatement(query);
+                statement.setDate(1, fecha);
+                statement.setString(2, plataforma);
+                statement.setInt(3, idEnt);
+                result = statement.executeUpdate();
+
+                query = "UPDATE feedback "
+                        + "SET aptitudFeed = ?, "
+                        + "descripcionFeed = ? "
+                        + "WHERE idFeed = (SELECT feedback FROM entrevista WHERE idEnt = ?);";
+                statement1 = connection.prepareStatement(query);
+                statement1.setString(1, aptitud);
+                statement1.setString(2, feedback);
+                statement1.setInt(3, idEnt);
+                result += statement1.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
     }
 }

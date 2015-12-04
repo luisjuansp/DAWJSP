@@ -23,7 +23,7 @@
                     if (active.equals("2")) {
                         out.print("class=\"active\"");
                     }
-                    %> ><a href="#"><span>Entrevistas</span></a></li>
+                    %> ><a href="#" onclick="getEntrevistas()"><span>Entrevistas</span></a></li>
                 <li <%
                     if (active.equals("3")) {
                         out.print("class=\"active\"");
@@ -66,5 +66,16 @@
 <script>
     function getEmpleados() {
         document.getElementById("getListaEmp").submit();
+    }
+</script>
+
+
+<form id="getListaEnt" action="Entrevista" method="post">
+    <input type="hidden" name="button" value="getList" />
+</form>
+
+<script>
+    function getEntrevistas() {
+        document.getElementById("getListaEnt").submit();
     }
 </script>

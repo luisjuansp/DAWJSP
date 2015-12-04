@@ -34,42 +34,42 @@
                             <div class="col-lg-6 text-left">
                                 <h3>
                                     <u>Nomina:</u>
-                                    <span class="displayer" >
+                                    <span >
                                         <%=empleado.getNomina()%>
                                     </span>
-                                    <input type="number" class="editer" name="nomina" value="<%=empleado.getNomina()%>" form="editEmp">
+                                    <input type="number" hidden="true" name="nomina" value="<%=empleado.getNomina()%>" form="editEmp">
                                     <br>
                                     <br>
                                     <u>Departamento:</u> 
-                                    <span class="displayer" >
+                                    <span id="departamentodis" class="displayer" >
                                         <%=empleado.getDepartamento()%>
                                     </span>
                                     <input type="text" class="editer" name="departamento" value="<%=empleado.getDepartamento()%>" form="editEmp">
                                     <br>
                                     <br>
                                     <u>Puesto:</u> 
-                                    <span class="displayer">
+                                    <span id="puestodis" class="displayer">
                                         <%=empleado.getPuesto()%>
                                     </span>
                                     <input type="text"  class="editer" name="puesto" value="<%=empleado.getPuesto()%>" form="editEmp">
                                     <br>
                                     <br>
                                     <u>Fecha de Entrada:</u> 
-                                    <span class="displayer" >
+                                    <span id="fechadis" class="displayer" >
                                         <%=empleado.getFechaEntrada()%>
                                     </span>
                                     <input type="date" class="editer" name="fecha" value="<%=empleado.getFechaEntrada()%>" form="editEmp">
                                     <br>
                                     <br>
                                     <u>Salario:</u> 
-                                    <span class="displayer" >
+                                    <span id="salariodis" class="displayer" >
                                         <%=empleado.getSalario()%>
                                     </span>
                                     <input type="number" class="editer" name="salario" value="<%=empleado.getSalario()%>" form="editEmp">
                                     <br>
                                     <br>
                                     <u>Dias de vacaciones al año:</u> 
-                                    <span class="displayer" >
+                                    <span id="vacacionesdis" class="displayer" >
                                         <%=empleado.getDiasVacaciones()%>
                                     </span>
                                     <input type="number" class="editer" name="vacaciones" value="<%=empleado.getDiasVacaciones()%>" form="editEmp">
@@ -77,10 +77,9 @@
                                     <% if (empleado.getSupervisor() != null) {%>
                                     <br>
                                     <u>Supervisor:</u>
-                                    <span class="displayer" >
+                                    <span>
                                         <%=empleado.getSupervisor()%>
                                     </span>
-                                    <input type="text" class="editer" name="supervisor" value="<%=empleado.getSupervisor()%>" form="editEmp">
                                     <br>
                                     <% }%>
                                 </h3>
@@ -88,14 +87,14 @@
                             <div class="col-lg-6 text-left">
                                 <h3>
                                     <u>Telefono:</u> 
-                                    <span class="displayer" >
+                                    <span id="teldis" class="displayer" >
                                         <%=empleado.getTelCand()%>
                                     </span>
                                     <input type="text" class="editer" name="tel" value="<%=empleado.getTelCand()%>" form="editEmp">
                                     <br> 
                                     <br>
                                     <u>E-mail:</u> 
-                                    <span class="displayer" >
+                                    <span id="emaildis" class="displayer" >
                                         <%=empleado.getEmailCand()%>
                                     </span>
                                     <input type="email" class="editer" name="email" value="<%=empleado.getEmailCand()%>" form="editEmp">
@@ -104,27 +103,27 @@
                                     <u>Direccion:</u>
                                     <br>
                                     <br>
-                                    <span class="displayer" >
+                                    <span id="calledis" class="displayer" >
                                         <%=empleado.getCalle()%> 
                                     </span>
                                     <input type="text" class="editer" name="calle" value="<%=empleado.getCalle()%>" form="editEmp">
-                                    <span class="displayer" >
+                                    <span id="numerodis" class="displayer" >
                                         #<%=empleado.getNumero()%>
                                     </span>
                                     <input type="number" class="editer" name="numero" value="<%=empleado.getNumero()%>" form="editEmp">
                                     <br> 
                                     <br>
-                                    <span class="displayer" >
+                                    <span id="ciudaddis" class="displayer" >
                                         <%=empleado.getCiudad()%>
                                     </span>
                                     <input type="text" class="editer" name="ciudad" value="<%=empleado.getCiudad()%>" form="editEmp">
-                                    <span class="displayer" >
+                                    <span id="estadodis" class="displayer" >
                                         , <%=empleado.getEstado()%>
                                     </span>
                                     <input type="text" class="editer" name="estado" value="<%=empleado.getEstado()%>" form="editEmp">
                                     <br> 
                                     <br>
-                                    <span class="displayer" >
+                                    <span id="codigodis" class="displayer" >
                                         <%=empleado.getCodigo()%>
                                     </span>
                                     <input type="number" class="editer" name="codigo" value="<%=empleado.getCodigo()%>" form="editEmp">
@@ -423,6 +422,39 @@
                             hissalarioData.push(hissalarioNew[i].value);
                         }
                     }
+
+                    document.getElementById("departamentodis").innerHTML =
+                            document.getElementsByName("departamento")[0].value;
+
+                    document.getElementById("puestodis").innerHTML =
+                            document.getElementsByName("puesto")[0].value;
+
+                    document.getElementById("fechadis").innerHTML =
+                            document.getElementsByName("fecha")[0].value;
+
+                    document.getElementById("vacacionesdis").innerHTML =
+                            document.getElementsByName("vacaciones")[0].value;
+
+                    document.getElementById("teldis").innerHTML =
+                            document.getElementsByName("tel")[0].value;
+
+                    document.getElementById("emaildis").innerHTML =
+                            document.getElementsByName("email")[0].value;
+
+                    document.getElementById("calledis").innerHTML =
+                            document.getElementsByName("calle")[0].value;
+
+                    document.getElementById("numerodis").innerHTML =
+                            document.getElementsByName("numero")[0].value;
+
+                    document.getElementById("ciudaddis").innerHTML =
+                            document.getElementsByName("ciudad")[0].value;
+
+                    document.getElementById("estadodis").innerHTML =
+                            document.getElementsByName("estado")[0].value;
+
+                    document.getElementById("codigodis").innerHTML =
+                            document.getElementsByName("codigo")[0].value;
 
                     closeEdit();
 

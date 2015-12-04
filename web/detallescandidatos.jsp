@@ -16,7 +16,7 @@
     </jsp:include>
     <script src="js/sorttable.js"></script>
     <% Candidate candidato = (Candidate) session.getAttribute("candidato");%>
-    <div class='container-fluid'>
+    <div class='container'>
         <div class='jumbotron'>
             <center>
                 <h1><%= candidato.getNombreCand()%></h1> 
