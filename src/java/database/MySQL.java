@@ -518,6 +518,31 @@ public class MySQL {
         }
         return result;
     }
+    
+    public int insertEmpleado(int candId, String pues, String depa, int sal, int vaca) {
+        int result = 0;
+        java.sql.Date timeNow = new Date(Calendar.getInstance().getTimeInMillis());
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO empleado"
+                        + "(puesto, departamento, fechaEntrada, salario, diasVacaciones, candId)"
+                        + "VALUES(?, ?, ?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, pues);
+                statement.setString(2, depa);
+                statement.setDate(3, timeNow);
+                statement.setInt(4, sal);
+                statement.setInt(5, vaca);
+                statement.setInt(6, candId);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Habilidad. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
 
     
     

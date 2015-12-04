@@ -23,6 +23,7 @@
                     <button class="displayer btn btn-info" onclick="startEdit()">Edit</button>
                     <button class="editer btn btn-success" onclick="submitEdit()">Submit</button>
                     <button class="editer btn btn-warning" onclick="closeEdit()">Cancel</button>
+                    <button class="displayer btn btn-danger" onclick="contratar()">Contratar!</button>
                 </div>
                 <h1><%= candidato.getNombreCand()%></h1> 
                 <br> <br>
@@ -515,5 +516,14 @@
             });
         }
     </script>
+    <form id="getDetalle" action="getCandidates" method="post">
+            <input type="hidden" name="button" value="contratar" />
+        </form>
+
+        <script>
+            function contratar() {
+                document.getElementById("getDetalle").submit();
+            }
+        </script>
 </body>
 <%@ include file="footer.jsp"%>

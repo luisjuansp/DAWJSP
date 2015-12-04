@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Luis Juan Sanchez P
  */
 public class CandidatesServlet extends HttpServlet {
+    private Object session;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -92,13 +93,14 @@ public class CandidatesServlet extends HttpServlet {
         String button = (String) request.getParameter("button");
         MySQL mysql = new MySQL();
         String url = "";
+        PrintWriter out = response.getWriter();
         RequestDispatcher dispatcher;
         switch (button) {
             case "getbasic":
                 // store the User object in the request object
                 request.setAttribute("table", mysql.getCandidates());
                 request.setAttribute("test", "tested");
-
+                
                 // forward request and response objects to JSP page
                 url = "/mysqltest.jsp";
                 LinkedList<Candidate> candidates = mysql.getCandidates();
@@ -107,6 +109,32 @@ public class CandidatesServlet extends HttpServlet {
                         = getServletContext().getRequestDispatcher(url);
                 dispatcher.forward(request, response);
                 break;
+
+            case "contratar":
+                // forward request and response objects to JSP page
+                url = "/contratacion.jsp";
+
+                dispatcher
+                        = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
+                break;
+            case "finalizarcontrato":
+                // forward request and response objects to JSP page
+                url = "/index.jsp";
+                String pues = request.getParameter("puesto");
+                out.print(pues);
+                String depa = request.getParameter("departamento");
+                out.print(depa);
+                int sal = Integer.parseInt(request.getParameter("salario"));
+                 out.print(pues);
+                int vaca = Integer.parseInt(request.getParameter("vacaciones"));
+                int idC = Integer.parseInt(request.getParameter("specId"));
+                out.print(mysql.insertEmpleado(idC, pues, depa, sal, vaca));
+                dispatcher
+                        = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
+                break;
+                
 
             case "getall":
                 // store the User object in the request object
@@ -128,10 +156,10 @@ public class CandidatesServlet extends HttpServlet {
             case "editCand":
                 // store the User object in the request object
                 // forward request and response objects to JSP page
-                PrintWriter out = response.getWriter();
+                
                 Map<String, String[]> dataMap = request.getParameterMap();
                 Enumeration<String> names = request.getParameterNames();
-                
+
                 while (names.hasMoreElements()) {
                     String name = names.nextElement();
                     String[] values = dataMap.get(name);
@@ -160,59 +188,59 @@ public class CandidatesServlet extends HttpServlet {
                         out.println(mysql.getStatus());
                     }
                 }
-                
+
                 String[] instituciones = dataMap.get("institucion");
                 String[] titulaciones = dataMap.get("titulacion");
                 String[] titfechas = dataMap.get("titfecha");
-                
+
                 for (int i = 0; i < instituciones.length; i++) {
                     if (instituciones[i].trim().length() > 0) {
                         out.println(mysql.insertTitulos(candId, instituciones[i], titulaciones[i], Date.valueOf(titfechas[i])));
                         out.println(mysql.getStatus());
                     }
                 }
-                
+
                 String[] organizacion = dataMap.get("organizacion");
                 String[] certificacion = dataMap.get("certificacion");
                 String[] cerfecha = dataMap.get("cerfecha");
-                
+
                 for (int i = 0; i < organizacion.length; i++) {
                     if (organizacion[i].trim().length() > 0) {
                         out.println(mysql.insertCertificado(candId, organizacion[i], certificacion[i], Date.valueOf(cerfecha[i])));
                         out.println(mysql.getStatus());
                     }
                 }
-                
+
                 String[] compania = dataMap.get("compania");
                 String[] status = dataMap.get("status");
                 String[] interes = dataMap.get("interes");
-                
+
                 for (int i = 0; i < compania.length; i++) {
                     if (compania[i].trim().length() > 0) {
-                        out.println(mysql.insertCompania(Integer.parseInt(nomina), compania[i], 
+                        out.println(mysql.insertCompania(Integer.parseInt(nomina), compania[i],
                                 status[i], interes[i]));
                         out.println(mysql.getStatus());
                     }
                 }
-                
+
                 String[] empresa = dataMap.get("empresa");
                 String[] puesto = dataMap.get("puesto");
                 String[] entrada = dataMap.get("entrada");
                 String[] salida = dataMap.get("salida");
                 String[] salario = dataMap.get("salario");
-                
+
                 for (int i = 0; i < empresa.length; i++) {
                     if (empresa[i].trim().length() > 0) {
-                        out.println(mysql.insertTrabajo(candId, empresa[i], puesto[i], Date.valueOf(entrada[i]),Date.valueOf(salida[i]), Integer.parseInt(salario[i])));
+                        out.println(mysql.insertTrabajo(candId, empresa[i], puesto[i], Date.valueOf(entrada[i]), Date.valueOf(salida[i]), Integer.parseInt(salario[i])));
                         out.println(candId);
                         out.println(mysql.getStatus());
                     }
                 }
-                
+
                 break;
             default:
                 url = "/mysqltest.jsp";
-                
+
                 dispatcher
                         = getServletContext().getRequestDispatcher(url);
                 dispatcher.forward(request, response);
