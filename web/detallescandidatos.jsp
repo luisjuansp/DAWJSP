@@ -16,6 +16,7 @@
     <script src="js/sorttable.js"></script>
     <% Candidate candidato = (Candidate) session.getAttribute("candidato");%>
     <div id="container" class='container'>
+
         <div class='jumbotron'>
             <center>
                 <div class="text-right">
