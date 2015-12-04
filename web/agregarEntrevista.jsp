@@ -26,7 +26,7 @@
                 <br> <br>            
                 <div class="panel panel-primary">
                     <div class="panel-body text-left">
-                        <form action="Entrevistas" method="post">
+                        <form action="Entrevista" method="post">
                             <div class="form-group">
                                 <label for="candidato">Candidato:</label>
                                 <select name="candidato" class="form-control">
@@ -57,7 +57,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="aptitud">Aptitud</label>
-                                <input type="text" class="form-control" id="aptitud">
+                                <input type="text" class="form-control" name="aptitud">
                             </div>
                             <div class="form-group">
                                 <label for="feedback">Feedback</label>

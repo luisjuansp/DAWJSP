@@ -89,6 +89,14 @@ public class EntrevistaServlet extends HttpServlet {
                 String aaptitud = (dataMap1.get("aptitud")[0]);
                 int aentrevistador = Integer.parseInt(dataMap1.get("entrevistador")[0]);
                 String afeedback = (dataMap1.get("feedback")[0]);
+                out1.println(mysql.insertEntrevista(acandidato, afecha, aplataforma, aentrevistador, aaptitud, afeedback));
+                out1.println(mysql.getStatus());
+                
+                url = "/listaEntrevistas.jsp";
+                LinkedList<Entrevista> entrevistas1 = mysql.getBasicEntrevista();
+                request.getSession().setAttribute("entrevistas", entrevistas1);
+                dispatcher = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
                 break;
             case "prepAdd":
                 url = "/agregarEntrevista.jsp";

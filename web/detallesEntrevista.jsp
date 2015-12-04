@@ -33,10 +33,10 @@
                         <div class="col-lg-6 text-left">
                             <h3>
                                 <u>Candidato:</u>
-                                <span id="candidatodis" class="displayer" >
+                                <span id="candidatodis" >
                                     <%=entrevista.getCandidato()%>
                                 </span>
-                                <input type="text" class="editer" name="candidato" value="<%=entrevista.getCandidato()%>" form="editEnt">
+                                <input type="text" hidden="true" name="candidato" value="<%=entrevista.getCandidato()%>" form="editEnt">
                                 <br>
                                 <br>
                                 <u>Fecha:</u> 
@@ -57,10 +57,10 @@
                         <div class="col-lg-6 text-left">
                             <h3>
                                 <u>Entrevistador:</u>
-                                <span id="entrevistadordis" class="displayer" >
+                                <span id="entrevistadordis" >
                                     <%=entrevista.getEmpleado()%>
                                 </span>
-                                <input type="text" class="editer" name="entrevistador" value="<%=entrevista.getEmpleado()%>" form="editEnt">
+                                <input type="text" hidden="true" name="entrevistador" value="<%=entrevista.getEmpleado()%>" form="editEnt">
                                 <br>
                                 <br>
                                 <u>Aptitud:</u> 

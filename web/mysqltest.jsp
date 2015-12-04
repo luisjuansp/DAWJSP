@@ -20,6 +20,9 @@
     <div class='container'>
         <div class='jumbotron'>
             <center>
+                <div class="text-right">
+                    <a class="btn btn-primary" href="./agregarCandidato.jsp">Agregar</a>
+                </div>
                 <h1>Candidatos</h1> <br> <br>
                 <div class="panel panel-primary">
                     <div class="panel-body">

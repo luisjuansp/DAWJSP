@@ -475,7 +475,7 @@ public class MySQL {
     }
 
     public int updateCandidato(int nomina, String tel, String email,
-            int paga,String calle, int numero, String ciudad, String estado, int codigo) {
+            int paga, String calle, int numero, String ciudad, String estado, int codigo) {
         int result = 0;
         PreparedStatement statement, statement1;
         if (connected) {
@@ -488,7 +488,7 @@ public class MySQL {
                 statement = connection.prepareStatement(query);
                 statement.setString(1, tel);
                 statement.setString(2, email);
-              statement.setInt(3, paga);
+                statement.setInt(3, paga);
                 statement.setInt(4, nomina);
                 result = statement.executeUpdate();
                 this.status = "OK";
@@ -518,7 +518,7 @@ public class MySQL {
         }
         return result;
     }
-    
+
     public int insertEmpleado(int candId, String pues, String depa, int sal, int vaca) {
         int result = 0;
         java.sql.Date timeNow = new Date(Calendar.getInstance().getTimeInMillis());
@@ -544,8 +544,6 @@ public class MySQL {
         return result;
     }
 
-    
-    
     public int insertHabilidades(int candId, String habilidad) {
         int result = 0;
         PreparedStatement statement;
@@ -632,8 +630,7 @@ public class MySQL {
         return result;
     }
 
-    
-    public int insertCompania(int nomina, String compania, String status,String interes) {
+    public int insertCompania(int nomina, String compania, String status, String interes) {
         int result = 0;
         PreparedStatement statement;
         if (connected) {
@@ -654,8 +651,8 @@ public class MySQL {
         }
         return result;
     }
-    
-    public int insertTrabajo(int nomina, String empresa, String puesto,Date entrada,Date salida, int salario) {
+
+    public int insertTrabajo(int nomina, String empresa, String puesto, Date entrada, Date salida, int salario) {
         int result = 0;
         PreparedStatement statement;
         if (connected) {
@@ -783,23 +780,85 @@ public class MySQL {
         }
         return result;
     }
-    
-    public int insertEntrevista(int nomina, String puesto, int salario, Date fecha) {
+
+    public int insertEntrevista(int cand, Date fecha, String plataforma, int emp, String aptitud, String feedback) {
         int result = 0;
-        PreparedStatement statement;
+        int feed = 0;
+        PreparedStatement statement, statement1, select;
         if (connected) {
             try {
-                String query = "INSERT INTO historial "
-                        + "(puestoHist, fechaHist, salarioHist, empId) "
-                        + "VALUES(?, ?, ?, ?);";
+                String query = "INSERT INTO feedback "
+                        + "(aptitudFeed ,descripcionFeed) "
+                        + "VALUES(?, ?);";
                 statement = connection.prepareStatement(query);
-                statement.setString(1, puesto);
-                statement.setDate(2, fecha);
-                statement.setInt(3, salario);
-                statement.setInt(4, nomina);
+                statement.setString(1, aptitud);
+                statement.setString(2, feedback);
                 result = statement.executeUpdate();
+
+                query = "SELECT MAX(idFeed) FROM feedback";
+                statement1 = connection.prepareStatement(query);
+                ResultSet resultSet;
+                resultSet = statement1.executeQuery();
+                if (resultSet.next()){
+                    feed = resultSet.getInt(1);
+                }
+
+                query = "INSERT INTO entrevista "
+                        + "(plataforma, fecha, feedback, entrevistado, entrevistador) "
+                        + "VALUES(?, ?, ?, ?, ?);";
+                statement1 = connection.prepareStatement(query);
+                statement1.setString(1, plataforma);
+                statement1.setDate(2, fecha);
+                statement1.setInt(3, feed);
+                statement1.setInt(4, cand);
+                statement1.setInt(5, emp);
+                result += statement1.executeUpdate();
             } catch (SQLException sqlex) {
-                this.status = "Unable to insert Certificado. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = "Unable to insert Entrevista. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+    
+    public int insertCandidato(String nombre, String tel, String email, int paga, String calle, 
+            int numero, String ciudad, String estado, int codigo) {
+        int result = 0;
+        int dir = 0;
+        PreparedStatement statement, statement1, select;
+        if (connected) {
+            try {
+                String query = "INSERT INTO direccion "
+                        + "(numero, calle, ciudad, estado, codigoPostal) "
+                        + "VALUES(?, ?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setInt(1, numero);
+                statement.setString(2, calle);
+                statement.setString(3, ciudad);
+                statement.setString(4, estado);
+                statement.setInt(5, codigo);
+                result = statement.executeUpdate();
+
+                query = "SELECT MAX(idDir) FROM direccion";
+                statement1 = connection.prepareStatement(query);
+                ResultSet resultSet;
+                resultSet = statement1.executeQuery();
+                if (resultSet.next()){
+                    dir = resultSet.getInt(1);
+                }
+
+                query = "INSERT INTO candidato "
+                        + "(nombreCand, telCand, emailCand, expectEconCand, direccion) "
+                        + "VALUES(?, ?, ?, ?, ?);";
+                statement1 = connection.prepareStatement(query);
+                statement1.setString(1, nombre);
+                statement1.setString(2, tel);
+                statement1.setString(3, email);
+                statement1.setInt(4, paga);
+                statement1.setInt(5, dir);
+                result += statement1.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Entrevista. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
                 this.status = this.status.replace(",", "<br>");
             }
         }

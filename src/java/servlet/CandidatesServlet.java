@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Luis Juan Sanchez P
  */
 public class CandidatesServlet extends HttpServlet {
+
     private Object session;
 
     /**
@@ -100,7 +101,7 @@ public class CandidatesServlet extends HttpServlet {
                 // store the User object in the request object
                 request.setAttribute("table", mysql.getCandidates());
                 request.setAttribute("test", "tested");
-                
+
                 // forward request and response objects to JSP page
                 url = "/mysqltest.jsp";
                 LinkedList<Candidate> candidates = mysql.getCandidates();
@@ -126,7 +127,7 @@ public class CandidatesServlet extends HttpServlet {
                 String depa = request.getParameter("departamento");
                 out.print(depa);
                 int sal = Integer.parseInt(request.getParameter("salario"));
-                 out.print(pues);
+                out.print(pues);
                 int vaca = Integer.parseInt(request.getParameter("vacaciones"));
                 int idC = Integer.parseInt(request.getParameter("specId"));
                 out.print(mysql.insertEmpleado(idC, pues, depa, sal, vaca));
@@ -134,7 +135,6 @@ public class CandidatesServlet extends HttpServlet {
                         = getServletContext().getRequestDispatcher(url);
                 dispatcher.forward(request, response);
                 break;
-                
 
             case "getall":
                 // store the User object in the request object
@@ -156,7 +156,7 @@ public class CandidatesServlet extends HttpServlet {
             case "editCand":
                 // store the User object in the request object
                 // forward request and response objects to JSP page
-                
+
                 Map<String, String[]> dataMap = request.getParameterMap();
                 Enumeration<String> names = request.getParameterNames();
 
@@ -237,6 +237,37 @@ public class CandidatesServlet extends HttpServlet {
                     }
                 }
 
+                break;
+            case "addCand":
+                Map<String, String[]> dataMap2 = request.getParameterMap();
+                Enumeration<String> names2 = request.getParameterNames();
+
+                while (names2.hasMoreElements()) {
+                    String name = names2.nextElement();
+                    String[] values = dataMap2.get(name);
+                    for (int i = 0; i < values.length; i++) {
+                        out.println(name + ": " + values[i]);
+                    }
+                }
+                String anombre = dataMap2.get("nombre")[0];
+                String atel = dataMap2.get("tel")[0];
+                String aemail = dataMap2.get("email")[0];
+                String apaga = dataMap2.get("paga")[0];
+                String acalle = dataMap2.get("calle")[0];
+                String anumero = dataMap2.get("numero")[0];
+                String aciudad = dataMap2.get("ciudad")[0];
+                String aestado = dataMap2.get("estado")[0];
+                String acodigo = dataMap2.get("codigo")[0];
+
+                out.println(mysql.insertCandidato(anombre, atel, aemail, Integer.parseInt(apaga),
+                        acalle, Integer.parseInt(anumero), aciudad, aestado, Integer.parseInt(acodigo)));
+                out.print(mysql.getStatus());
+                url = "/mysqltest.jsp";
+                LinkedList<Candidate> candidates1 = mysql.getCandidates();
+                request.getSession().setAttribute("candidatos", candidates1);
+                dispatcher
+                        = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
                 break;
             default:
                 url = "/mysqltest.jsp";

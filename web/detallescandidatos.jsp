@@ -28,18 +28,18 @@
                 <h1><%= candidato.getNombreCand()%></h1> 
                 <br> <br>
                 <div class="container">
-                    <div class="panel panel-success">
-                        <div class="panel-info"> 
+                    <div class="panel panel-info">
+                        <div class="panel-heading"> 
                             <h2>Datos Generales</h2> 
                         </div>
                         <div class="panel-body">
                             <div class="col-lg-6 text-left">
                                 <h3>
-                                    <u>Nomina:</u>
-                                    <span class="displayer" >
+                                    <u>ID:</u>
+                                    <span  >
                                         <%=candidato.getIdCand()%>
                                     </span>
-                                    <input type="number" class="editer" name="nomina" value="<%=candidato.getIdCand()%>" form="editCand">
+                                    <input type="number" hidden="true" name="nomina" value="<%=candidato.getIdCand()%>" form="editCand">
                                     <br>
                                     <br>
                                     <u>Telefono:</u> 
@@ -100,8 +100,8 @@
                         </div> 
                     </div>
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-info">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
                         <h2> Habilidades </h2> 
                     </div>
                     <div class="panel-body">
@@ -114,8 +114,8 @@
                         </table>
                     </div> 
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-info">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
                         <h2> Titulos </h2> 
                     </div>
                     <div class="panel-body">
@@ -135,8 +135,8 @@
                         </table>
                     </div> 
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-info">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
                         <h2> Certificados </h2> 
                     </div>
                     <div class="panel-body">
@@ -156,8 +156,8 @@
                         </table>
                     </div>
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-info">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
                         <h2> Entrevista con otras compañias </h2> 
                     </div>
                     <div class="panel-body">
@@ -177,8 +177,8 @@
                         </table> 
                     </div>
                 </div>
-                        <div class="panel panel-success">
-                    <div class="panel-info">
+                        <div class="panel panel-info">
+                    <div class="panel-heading">
                         <h2> Trabajos Anteriores </h2> 
                     </div>
                     <div class="panel-body">
