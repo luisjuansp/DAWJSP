@@ -20,6 +20,9 @@
     <div id="container" class='container'>
         <div class='jumbotron'>
             <center>
+                <div class="text-right">
+                    <button class="btn btn-primary" onclick="prepAdd()">Agregar</button>
+                </div>
                 <h1>Entrevistas</h1> 
                 <br> <br>            
                 <div class="panel panel-primary">
@@ -63,5 +66,17 @@
             document.getElementById("getDetalle").submit();
         }
     </script>
+
+    <form id="prepAdd" action="Entrevista" method="post">
+        <input type="hidden" name="button" value="prepAdd"/>
+    </form>
+
+    <script>
+        function prepAdd() {
+            document.getElementById("prepAdd").submit();
+        }
+    </script>
+
+
 </body>
 <%@ include file="footer.jsp"%>

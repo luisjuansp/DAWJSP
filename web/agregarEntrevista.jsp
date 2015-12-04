@@ -4,6 +4,9 @@
     Author     : jcou
 --%>
 
+<%@page import="beans.Empleado"%>
+<%@page import="java.util.LinkedList"%>
+<%@page import="beans.Candidate"%>
 <jsp:include page="header.jsp">
     <jsp:param name="pageTitle" value="Agregar Entrevista" />
 </jsp:include>
@@ -12,52 +15,61 @@
     <jsp:include page="navbar.jsp">
         <jsp:param name="active" value="2" />
     </jsp:include>
+    <%  LinkedList<Candidate> candidates = (LinkedList<Candidate>) session.getAttribute("candidatos");
+        LinkedList<Empleado> empleados = (LinkedList<Empleado>) session.getAttribute("empleados");
+    %>
     <script src="js/sorttable.js"></script>
-
-
     <div id="container" class='container'>
         <div class='jumbotron'>
             <center>
                 <h1>Agregar Entrevista </h1> 
                 <br> <br>            
                 <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <table class ='sortable table table-striped table-hover text-center'> 
-                            <tr>
-                                <th class="text-left">Fecha</th>
-                                <td class ="text-left"><input type="text" name= "Fecha" size="40"></td>
-
-                            </tr>
-
-                            <tr>
-                                <th class="text-left">Plataforma</th>
-                                <td class ="text-left"><input type="text" name= "Plataforma" size="40"></td>
-                            </tr>
-
-                            <tr>
-                                <th class="text-left">Entrevistador</th>
-                                <td class ="text-left"><input type="text" name= "Entrevistador" size="40"></td>
-                            </tr>
-
-                            <tr>
-                                <th class="text-left">Retroalimentacion</th>
-                                <td class="text-left" ><textarea rows="4" cols="50"></textarea></td>
-                            </tr> 
-
-                            <tr>
-                                <th class="text-left">Descripcion</th>
-                                <td class="text-left"> <textarea rows="4" cols="50"></textarea> </td>
-                            </tr>
-
-                            <tr>
-                                <th class="text-left">Aptitud</th>
-                                <td class ="text-left"><input type="text" name= "Aptitud" size="40"></td>
-                            </tr>
-                        </table>
-                        <button type='button' class='btn btn-info' name='detalle' title="Agregar"> Agregar
-                        </button> 
+                    <div class="panel-body text-left">
+                        <form action="Entrevistas" method="post">
+                            <div class="form-group">
+                                <label for="candidato">Candidato:</label>
+                                <select name="candidato" class="form-control">
+                                    <% for (int i = 0; i < candidates.size(); i++) {%>
+                                    <option value="<%=candidates.get(i).getIdCand()%>">
+                                        <%=candidates.get(i).getNombreCand()%>
+                                    </option>
+                                    <%}%>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha">Fecha:</label>
+                                <input type="date" class="form-control" name="fecha">
+                            </div>
+                            <div class="form-group">
+                                <label for="plataforma">Plataforma</label>
+                                <input type="text" class="form-control" name="plataforma">
+                            </div>
+                            <div class="form-group">
+                                <label for="entrevistador">Entrevistador</label>
+                                <select name="entrevistador" class="form-control">
+                                    <% for (int i = 0; i < empleados.size(); i++) {%>
+                                    <option value="<%=empleados.get(i).getNomina()%>">
+                                        <%=empleados.get(i).getNombreCand()%>
+                                    </option>
+                                    <%}%>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="aptitud">Aptitud</label>
+                                <input type="text" class="form-control" id="aptitud">
+                            </div>
+                            <div class="form-group">
+                                <label for="feedback">Feedback</label>
+                                <textarea class="form-control" rows="5" name="feedback"></textarea>
+                            </div>
+                            <input class="hidden" name="button" value="addEnt">
+                            <input type='submit' class='btn btn-info' value="Agregar">
+                        </form>
                     </div>
                 </div>
             </center>
         </div>
     </div>
+</body>
+<%@ include file="footer.jsp"%>

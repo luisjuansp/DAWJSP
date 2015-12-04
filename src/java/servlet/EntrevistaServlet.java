@@ -5,6 +5,8 @@
  */
 package servlet;
 
+import beans.Candidate;
+import beans.Empleado;
 import beans.Entrevista;
 import database.MySQL;
 import java.io.IOException;
@@ -71,7 +73,33 @@ public class EntrevistaServlet extends HttpServlet {
                 out.println(mysql.getStatus());
                 break;
             case "addEnt":
+                PrintWriter out1 = response.getWriter();
+                Map<String, String[]> dataMap1 = request.getParameterMap();
+                Enumeration<String> names1 = request.getParameterNames();
+                while (names1.hasMoreElements()) {
+                    String name = names1.nextElement();
+                    String[] values = dataMap1.get(name);
+                    for (int i = 0; i < values.length; i++) {
+                        out1.println(name + ": " + values[i]);
+                    }
+                }
+                int acandidato = Integer.parseInt(dataMap1.get("candidato")[0]);
+                Date afecha = Date.valueOf(dataMap1.get("fecha")[0]);
+                String aplataforma = (dataMap1.get("plataforma")[0]);
+                String aaptitud = (dataMap1.get("aptitud")[0]);
+                int aentrevistador = Integer.parseInt(dataMap1.get("entrevistador")[0]);
+                String afeedback = (dataMap1.get("feedback")[0]);
                 break;
+            case "prepAdd":
+                url = "/agregarEntrevista.jsp";
+                LinkedList<Candidate> candidatos = mysql.getCandidates();
+                LinkedList<Empleado> empleados = mysql.getBasicEmpleados();
+                request.getSession().setAttribute("candidatos", candidatos);
+                request.getSession().setAttribute("empleados", empleados);
+                dispatcher = getServletContext().getRequestDispatcher(url);
+                dispatcher.forward(request, response);
+                break;
+
         }
     }
 

@@ -663,4 +663,26 @@ public class MySQL {
         }
         return result;
     }
+    
+    public int insertEntrevista(int nomina, String puesto, int salario, Date fecha) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO historial "
+                        + "(puestoHist, fechaHist, salarioHist, empId) "
+                        + "VALUES(?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, puesto);
+                statement.setDate(2, fecha);
+                statement.setInt(3, salario);
+                statement.setInt(4, nomina);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Certificado. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
 }
