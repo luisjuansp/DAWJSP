@@ -8,6 +8,7 @@ package database;
 import beans.*;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSetMetaData;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,6 +29,10 @@ public class MySQL {
     private String database = "jdbc:mysql://localhost/proyectodaw";
     private String dbusername = "root";
     private String dbpassword = "";
+
+    public String getStatus() {
+        return status;
+    }
 
     public MySQL() {
         // Load the driver to allow connection to the database
@@ -364,4 +369,193 @@ public class MySQL {
         return empleado;
     }
 
+    public int getEmpleadoCandId(int idEmp) {
+        int empleado = 0;
+        PreparedStatement statement;
+        ResultSet resultSet;
+        if (connected) {
+            try {
+                String query = "SELECT c.idCand "
+                        + "FROM candidato c JOIN empleado e ON e.candId = c.idCand "
+                        + "WHERE e.nomina = ?;";
+                statement = connection.prepareStatement(query);
+                statement.setInt(1, idEmp);
+                resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    empleado = resultSet.getInt(1);
+                }
+            } catch (SQLException sqlex) {
+                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return empleado;
+    }
+
+    public int updateEmpleado(int nomina, String puesto, String departamento,
+            Date fechaEntrada, int salario, int diasVacaciones, String supervisor) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "UPDATE empleado "
+                        + "SET puesto = ?, "
+                        + "departamento = ?, "
+                        + "fechaEntrada = ?, "
+                        + "salario = ?, "
+                        + "diasVacaciones = ? "
+                        + "WHERE nomina = ?;";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, puesto);
+                statement.setString(2, departamento);
+                statement.setDate(3, fechaEntrada);
+                statement.setInt(4, salario);
+                statement.setInt(5, diasVacaciones);
+                statement.setInt(6, nomina);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to update Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+
+    }
+
+    public int updateEmpleadoCandidato(int nomina, String tel, String email,
+            String calle, int numero, String ciudad, String estado, int codigo) {
+        int result = 0;
+        PreparedStatement statement, statement1;
+        if (connected) {
+            try {
+                String query = "UPDATE candidato c "
+                        + "SET c.telCand = ?, "
+                        + "c.emailCand = ? "
+                        + "WHERE EXISTS ( SELECT * FROM empleado"
+                        + " WHERE nomina = ?"
+                        + " AND empleado.candId = c.idCand);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, tel);
+                statement.setString(2, email);
+//                statement.setString(3, calle);
+//                statement.setInt(4, numero);
+//                statement.setString(5, ciudad);
+//                statement.setString(6, estado);
+//                statement.setInt(7, codigo);
+                statement.setInt(3, nomina);
+                result = statement.executeUpdate();
+                this.status = "OK";
+
+                query = "UPDATE direccion d "
+                        + "SET d.calle = ?, "
+                        + "d.numero = ?, "
+                        + "d.ciudad = ?, "
+                        + "d.estado = ?, "
+                        + "d.codigoPostal = ? "
+                        + "WHERE EXISTS ( SELECT * FROM empleado, candidato c"
+                        + " WHERE nomina = ?"
+                        + " AND empleado.candId = c.idCand"
+                        + " AND c.direccion = d.idDir);";
+                statement1 = connection.prepareStatement(query);
+                statement1.setString(1, calle);
+                statement1.setInt(2, numero);
+                statement1.setString(3, ciudad);
+                statement1.setString(4, estado);
+                statement1.setInt(5, codigo);
+                statement1.setInt(6, nomina);
+                result = statement1.executeUpdate();
+                this.status = "OK";
+            } catch (SQLException sqlex) {
+                this.status = "Unable to update Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+
+    public int insertHabilidades(int candId, String habilidad) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO habilidades "
+                        + "(habilidad, candId)"
+                        + "VALUES(?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, habilidad);
+                statement.setInt(2, candId);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Habilidad. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+
+    public int insertTitulos(int candId, String instituto, String titulacion, Date fecha) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO titulo "
+                        + "(instituto, titulacion, fecha , candId) "
+                        + "VALUES(?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, instituto);
+                statement.setString(2, titulacion);
+                statement.setDate(3, fecha);
+                statement.setInt(4, candId);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Titulo. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+
+    public int insertCertificado(int candId, String organizacion, String certificado, Date fecha) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO certificado "
+                        + "(organizacion, certificacion, fecha , candId) "
+                        + "VALUES(?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, organizacion);
+                statement.setString(2, certificado);
+                statement.setDate(3, fecha);
+                statement.setInt(4, candId);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Certificado. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+
+    public int insertHisorial(int nomina, String puesto, int salario, Date fecha) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO historial "
+                        + "(puestoHist, fechaHist, salarioHist, empId) "
+                        + "VALUES(?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, puesto);
+                statement.setDate(2, fecha);
+                statement.setInt(3, salario);
+                statement.setInt(4, nomina);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Certificado. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
 }

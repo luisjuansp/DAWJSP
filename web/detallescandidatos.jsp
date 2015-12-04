@@ -12,7 +12,7 @@
 <body>
     <%@ include file="login-checker.jsp"%> 
     <jsp:include page="navbar.jsp">
-        <jsp:param name="active" value="3" />
+        <jsp:param name="active" value="1" />
     </jsp:include>
     <script src="js/sorttable.js"></script>
     <% Candidate candidato = (Candidate) session.getAttribute("candidato");%>
