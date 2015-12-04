@@ -558,4 +558,34 @@ public class MySQL {
         }
         return result;
     }
+    
+    public LinkedList<Entrevista> getBasicEntrevista() {
+        LinkedList<Entrevista> entrevistas = new LinkedList();
+        PreparedStatement statement;
+        ResultSet resultSet;
+//        if (connected) {
+//            try {
+//                String query = "SELECT candidato.nombreCand, empleado.departamento, candidato.telCand, candidato.emailCand, empleado.nomina "
+//                        + "FROM empleado "
+//                        + "JOIN candidato ON candidato.idCand = empleado.candId "
+//                        + "LEFT JOIN empleado AS super ON super.nomina = empleado.supervisor "
+//                        + "LEFT JOIN candidato AS supervisor ON supervisor.idCand = super.candId;";
+//                statement = connection.prepareStatement(query);
+//                resultSet = statement.executeQuery();
+//                while (resultSet.next()) {
+//                    Empleado empleado = new Empleado();
+//                    empleado.setNombreCand(resultSet.getString(1));
+//                    empleado.setDepartamento(resultSet.getString(2));
+//                    empleado.setTelCand(resultSet.getString(3));
+//                    empleado.setEmailCand(resultSet.getString(4));
+//                    empleado.setNomina(resultSet.getInt(5));
+//                    empleados.add(empleado);
+//                }
+//            } catch (SQLException sqlex) {
+//                this.status = "Unable to get Employees. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+//                this.status = this.status.replace(",", "<br>");
+//            }
+//        }
+        return entrevistas;
+    }
 }
