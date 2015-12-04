@@ -64,6 +64,7 @@ public class MySQL {
                         + "WHERE c.idCand = " + idCand + ";";
                 statement = connection.prepareStatement(query);
                 resultSet = statement.executeQuery();
+                candidato.setIdCand(idCand);
                 // If there are no records, display a message
                 if (resultSet.next()) {
                     candidato.setNombreCand(resultSet.getString(1));
@@ -473,6 +474,53 @@ public class MySQL {
         return result;
     }
 
+    public int updateCandidato(int nomina, String tel, String email,
+            int paga,String calle, int numero, String ciudad, String estado, int codigo) {
+        int result = 0;
+        PreparedStatement statement, statement1;
+        if (connected) {
+            try {
+                String query = "UPDATE candidato "
+                        + "SET telCand = ?, "
+                        + "emailCand = ?, "
+                        + "expectEconCand = ?"
+                        + " WHERE idCand = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, tel);
+                statement.setString(2, email);
+              statement.setInt(3, paga);
+                statement.setInt(4, nomina);
+                result = statement.executeUpdate();
+                this.status = "OK";
+
+                query = "UPDATE direccion d "
+                        + "SET d.calle = ?, "
+                        + "d.numero = ?, "
+                        + "d.ciudad = ?, "
+                        + "d.estado = ?, "
+                        + "d.codigoPostal = ? "
+                        + "WHERE EXISTS ( SELECT * FROM  candidato c "
+                        + " WHERE c.idCand = ?"
+                        + " AND c.direccion = d.idDir);";
+                statement1 = connection.prepareStatement(query);
+                statement1.setString(1, calle);
+                statement1.setInt(2, numero);
+                statement1.setString(3, ciudad);
+                statement1.setString(4, estado);
+                statement1.setInt(5, codigo);
+                statement1.setInt(6, nomina);
+                result = statement1.executeUpdate();
+                this.status = "OK";
+            } catch (SQLException sqlex) {
+                this.status = "Unable to update Candidate. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+
+    
+    
     public int insertHabilidades(int candId, String habilidad) {
         int result = 0;
         PreparedStatement statement;
@@ -553,6 +601,52 @@ public class MySQL {
                 result = statement.executeUpdate();
             } catch (SQLException sqlex) {
                 this.status = "Unable to insert Certificado. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+    
+    public int insertCompania(int nomina, String compania, String status,String interes) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO compania "
+                        + "(nombreComp, status, razonInteres, candId) "
+                        + "VALUES(?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, compania);
+                statement.setString(2, status);
+                statement.setString(3, interes);
+                statement.setInt(4, nomina);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Compañia. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
+                this.status = this.status.replace(",", "<br>");
+            }
+        }
+        return result;
+    }
+    
+    public int insertTrabajo(int nomina, String empresa, String puesto,Date entrada,Date salida, int salario) {
+        int result = 0;
+        PreparedStatement statement;
+        if (connected) {
+            try {
+                String query = "INSERT INTO trabajo_anterior "
+                        + "(empresaAnt, puestoAnt, fechaEntrada, fechaSalida, salarioAnt, candId) "
+                        + "VALUES(?, ?, ?, ?, ?, ?);";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, empresa);
+                statement.setString(2, puesto);
+                statement.setDate(3, entrada);
+                statement.setDate(4, salida);
+                statement.setInt(5, salario);
+                statement.setInt(6, nomina);
+                result = statement.executeUpdate();
+            } catch (SQLException sqlex) {
+                this.status = "Unable to insert Trabajo. <br>" + sqlex.getMessage() + Arrays.toString(sqlex.getStackTrace());
                 this.status = this.status.replace(",", "<br>");
             }
         }
