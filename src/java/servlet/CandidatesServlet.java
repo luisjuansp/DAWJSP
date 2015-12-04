@@ -113,6 +113,7 @@ public class CandidatesServlet extends HttpServlet {
                 candidato.setTitulos(mysql.getTitulos(idCand));
                 candidato.setTrabajos(mysql.getAnteriores(idCand));
                 candidato.setCompanias(mysql.getCompanias(idCand));
+                candidato.setCertificados(mysql.getCertificados(idCand));
 
                 // forward request and response objects to JSP page
                 url = "/detallescandidatos.jsp";
